@@ -1,5 +1,9 @@
 # Copilot Studio Gems 💎
 
+[![Deploy MkDocs](https://github.com/sebbrochet/copilotstudiogems/actions/workflows/deploy.yml/badge.svg)](https://github.com/sebbrochet/copilotstudiogems/actions/workflows/deploy.yml)
+[![GitHub tag](https://img.shields.io/github/v/tag/sebbrochet/copilotstudiogems?label=version&sort=semver)](https://github.com/sebbrochet/copilotstudiogems/tags)
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 <p align="center">
   <img src="docs/assets/cover.png" alt="Copilot Studio Gems cover" width="480" />
 </p>

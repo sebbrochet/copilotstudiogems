@@ -3,6 +3,7 @@ name: Deploy MkDocs to GitHub Pages
 on:
   push:
     branches: [main]
+    tags: ['v*']
   workflow_dispatch:
 
 permissions:
@@ -14,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -22,6 +25,17 @@ jobs:
 
       - name: Install dependencies
         run: pip install mkdocs-material mkdocs-callouts
+
+      - name: Determine version
+        id: version
+        run: |
+          VERSION=$(git describe --tags --always 2>/dev/null || echo "dev")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Site version: $VERSION"
+
+      - name: Inject version into MkDocs config
+        run: |
+          sed -i "s/__VERSION__/${{ steps.version.outputs.version }}/" mkdocs.yml
 
       - name: Sync gems to docs
         run: |

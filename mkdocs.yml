@@ -6,7 +6,7 @@ site_url: "https://copilotstudiogems.sebbrochet.com"
 repo_url: "https://github.com/sebbrochet/copilotstudiogems"
 repo_name: "sebbrochet/copilotstudiogems"
 
-copyright: "© 2026 Sébastien Brochet. All rights reserved."
+copyright: "© 2026 Sébastien Brochet. All rights reserved. | __VERSION__"
 
 theme:
   name: material
