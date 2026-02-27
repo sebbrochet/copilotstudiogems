@@ -1,0 +1,149 @@
+site_name: "Copilot Studio Gems"
+site_description: "Practical, evaluated patterns for building AI agents in Microsoft Copilot Studio"
+site_author: "Sébastien Brochet"
+site_url: "https://copilotstudiogems.github.io"
+
+repo_url: "https://github.com/sebbrochet/copilotstudiogems"
+repo_name: "sebbrochet/copilotstudiogems"
+
+copyright: "© 2026 Sébastien Brochet. All rights reserved."
+
+theme:
+  name: material
+  language: en
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.top
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - toc.follow
+  icon:
+    repo: fontawesome/brands/github
+    logo: material/diamond-stone
+  favicon: assets/favicon.svg
+
+extra:
+  social:
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/sebastienbrochet
+    - icon: fontawesome/brands/github
+      link: https://github.com/sebbrochet
+  generator: false
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - tables
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+      toc_depth: 3
+  - def_list
+  - footnotes
+
+plugins:
+  - search
+  - callouts
+  - tags
+
+extra_css:
+  - stylesheets/extra.css
+
+nav:
+  - Copilot Studio Gems: index.md
+  - Foreword: front-matter/foreword.md
+  - How to Read: front-matter/how-to-read.md
+
+  - "I. State":
+    - parts/part-1.md
+    - "GEM-001: User Context": gems/GEM-001-persisting-user-context-across-sessions.md
+    - "GEM-011: Session Memory": gems/GEM-011-conversation-memory-within-a-session.md
+    - "GEM-017: Multi-Tenant": gems/GEM-017-multi-tenant-agent-configuration.md
+
+  - "II. Persona":
+    - parts/part-2.md
+    - "GEM-002: Persona Adaptation": gems/GEM-002-persona-adaptive-agent-instructions.md
+    - "GEM-005: Multi-Language": gems/GEM-005-multi-language-agent-response.md
+    - "GEM-020: Living Instructions": gems/GEM-020-agent-instructions-as-living-documents.md
+
+  - "III. UX":
+    - parts/part-3.md
+    - "GEM-006: Card Forms": gems/GEM-006-adaptive-cards-as-multi-field-forms.md
+    - "GEM-010: Human Handoff": gems/GEM-010-agent-to-human-handoff-with-context.md
+    - "GEM-021: Disambiguation": gems/GEM-021-conversation-branching-and-disambiguation.md
+    - "GEM-025: Custom Canvas": gems/GEM-025-custom-canvas-and-embedded-agent-ux-patterns.md
+    - "GEM-027: Regulated Flows": gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows.md
+
+  - "IV. Security":
+    - parts/part-4.md
+    - "GEM-007: Role Gating": gems/GEM-007-role-based-feature-gating.md
+    - "GEM-022: Secure Data": gems/GEM-022-secure-data-handling-in-conversations.md
+
+  - "V. Integration":
+    - parts/part-5.md
+    - "GEM-009: Fallback Chains": gems/GEM-009-graceful-degradation-and-fallback-chains.md
+    - "GEM-014: Proactive Msgs": gems/GEM-014-proactive-agent-messages-and-event-driven-conversations.md
+    - "GEM-015: Dataverse CRUD": gems/GEM-015-dataverse-crud-operations-patterns.md
+    - "GEM-018: SharePoint Docs": gems/GEM-018-sharepoint-document-retrieval-and-display.md
+    - "GEM-023: MCP Connectors": gems/GEM-023-mcp-connector-integration-patterns.md
+    - "GEM-024: Multi-Agent": gems/GEM-024-multi-agent-composition-and-connected-agent-patterns.md
+    - "GEM-028: Fabric Data": gems/GEM-028-grounding-agents-in-enterprise-analytics-data.md
+
+  - "VI. Knowledge":
+    - parts/part-6.md
+    - "GEM-008: Knowledge Optim.": gems/GEM-008-knowledge-source-optimization.md
+    - "GEM-012: Token Budget": gems/GEM-012-cost-estimation-and-token-budget-management.md
+    - "GEM-026: AI Search": gems/GEM-026-azure-ai-search-advanced-integration.md
+
+  - "VII. Ops":
+    - parts/part-7.md
+    - "GEM-003: Progress Tracing": gems/GEM-003-tracing-agent-progress-before-response.md
+    - "GEM-004: Debug Mode": gems/GEM-004-debug-mode-for-m365-copilot.md
+    - "GEM-013: Testing": gems/GEM-013-testing-strategies-for-multi-agent-architectures.md
+    - "GEM-016: Analytics": gems/GEM-016-conversation-analytics-and-quality-measurement.md
+
+  - Appendices:
+    - "A: Gem Template": appendices/gem-template.md
+    - "B: Platform Ref": appendices/platform-reference.md
+    - "C: Gotchas": appendices/gotchas-compendium.md
+    - "D: Decisions": appendices/decision-frameworks.md
+    - "Glossary": appendices/glossary.md
+    - "About": appendices/about-author.md

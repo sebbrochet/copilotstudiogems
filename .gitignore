@@ -1,0 +1,55 @@
+# ==========================
+# Build outputs
+# ==========================
+output/
+
+# ==========================
+# Manuscript (Pandoc/EPUB/PDF source — not published to git)
+# ==========================
+manuscript/
+
+# ==========================
+# Pandoc build toolchain (EPUB/PDF only — not needed for MkDocs)
+# ==========================
+build/build-pandoc.ps1
+build/callouts.lua
+build/latex-header.tex
+build/mermaid-config.json
+
+# ==========================
+# Derived copies (synced from gems/ source of truth)
+# ==========================
+docs/gems/GEM-*.md
+
+# ==========================
+# MkDocs generated site
+# ==========================
+site/
+
+# ==========================
+# Python virtual environment
+# ==========================
+.venv/
+
+# ==========================
+# Memory bank (agent context, not project code)
+# ==========================
+.memorybank/
+
+# ==========================
+# OS / editor artifacts
+# ==========================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vs/
+.vscode/settings.json
+
+# ==========================
+# Local only
+# ==========================
+BACKLOG.md
+*.png
+!docs/assets/cover.png
