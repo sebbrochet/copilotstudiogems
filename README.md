@@ -26,45 +26,45 @@ Minimum 2 approaches per Gem. Real YAML/Power Fx/JSON code. Platform gotchas fro
 
 | # | Gem | Category | Complexity | Approaches |
 | - | --- | -------- | ---------- | ---------- |
-| 001 | [Persisting User Context Across Sessions](gems/GEM-001-persisting-user-context-across-sessions.md) | Context & State | ⭐⭐⭐ | Dataverse · SharePoint · HTTP API |
-| 002 | [Persona-Adaptive Agent Instructions](gems/GEM-002-persona-adaptive-agent-instructions.md) | Personalization | ⭐⭐⭐ | Branched Instructions · Multi-Agent · Prompt Tool |
-| 003 | [Tracing Agent Progress Before Response](gems/GEM-003-tracing-agent-progress-before-response.md) | Observability | ⭐⭐–⭐⭐⭐ | Sequential Messages · LLM Self-Narration · Adaptive Card |
-| 004 | [Debug Mode for M365 Copilot Channel](gems/GEM-004-debug-mode-for-m365-copilot.md) | Observability | ⭐⭐⭐ | Keyword Inline · App Insights · Adaptive Card Panel |
-| 005 | [Multi-Language Agent Response](gems/GEM-005-multi-language-agent-response.md) | Personalization | ⭐⭐⭐ | Graph API Profile · LLM Auto-Detect · Explicit Choice |
-| 006 | [Adaptive Cards as Multi-Field Forms](gems/GEM-006-adaptive-cards-as-multi-field-forms.md) | UX | ⭐⭐⭐ | Sequential Questions · Adaptive Card · Hybrid |
-| 007 | [Role-Based Feature Gating](gems/GEM-007-role-based-feature-gating.md) | Security | ⭐⭐⭐ | Entra Groups · Token Claims · LLM Instructions |
-| 008 | [Knowledge Source Optimization](gems/GEM-008-knowledge-source-optimization.md) | Performance | ⭐⭐ | Format Strategy · Content Chunking · Custom Instructions |
-| 009 | [Graceful Degradation and Fallback Chains](gems/GEM-009-graceful-degradation-and-fallback-chains.md) | Integration | ⭐⭐⭐ | Error-Branch · Cached Response · Escalation |
-| 010 | [Agent-to-Human Handoff with Context](gems/GEM-010-agent-to-human-handoff-with-context.md) | UX | ⭐⭐⭐–⭐⭐⭐⭐ | LLM Summary · Context Card · Omnichannel |
-| 011 | [Conversation Memory Within a Session](gems/GEM-011-conversation-memory-within-a-session.md) | Context & State | ⭐⭐–⭐⭐⭐ | Accumulator · LLM Summary · Entity Tracking |
-| 012 | [Cost Estimation and Token Budget Management](gems/GEM-012-cost-estimation-and-token-budget-management.md) | Performance | ⭐⭐⭐ | App Insights Tracking · Response Capping · Turn Limits |
-| 013 | [Testing Strategies for Multi-Agent Architectures](gems/GEM-013-testing-strategies-for-multi-agent-architectures.md) | Observability | ⭐⭐⭐–⭐⭐⭐⭐ | Manual Script · Automated Keywords · LLM-as-Judge |
-| 014 | [Proactive Agent Messages and Event-Driven Conversations](gems/GEM-014-proactive-agent-messages-and-event-driven-conversations.md) | Integration | ⭐⭐⭐⭐ | PA Teams Card · Bot Framework API · Platform Triggers |
-| 015 | [Dataverse CRUD Operations Patterns](gems/GEM-015-dataverse-crud-operations-patterns.md) | Integration | ⭐⭐⭐ | Power Automate · HTTP Direct · Generative AI |
-| 016 | [Conversation Analytics and Quality Measurement](gems/GEM-016-conversation-analytics-and-quality-measurement.md) | Observability | ⭐⭐–⭐⭐⭐ | Built-in Analytics · App Insights Custom · CSAT Survey |
-| 017 | [Multi-Tenant Agent Configuration](gems/GEM-017-multi-tenant-agent-configuration.md) | Context & State | ⭐⭐⭐⭐ | Env per Environment · Runtime Config Table · Git Branching |
-| 018 | [SharePoint Document Retrieval and Display](gems/GEM-018-sharepoint-document-retrieval-and-display.md) | Integration | ⭐⭐⭐ | PA + SharePoint Search · Graph Search API · Generative Discovery |
-| 020 | [Agent Instructions as Living Documents](gems/GEM-020-agent-instructions-as-living-documents.md) | Personalization | ⭐⭐⭐⭐ | YAML + Git · Dataverse Store · Markdown Fragments |
-| 021 | [Conversation Branching and Disambiguation](gems/GEM-021-conversation-branching-and-disambiguation.md) | UX | ⭐⭐⭐ | Disambiguation Topic · LLM Inference · Trigger Engineering |
-| 022 | [Secure Data Handling in Conversations](gems/GEM-022-secure-data-handling-in-conversations.md) | Security | ⭐⭐⭐⭐ | Instruction Prevention · Input Sanitizer · Telemetry Redaction |
-| 023 | [MCP Connector Integration Patterns](gems/GEM-023-mcp-connector-integration-patterns.md) | Integration | ⭐⭐⭐ | MCP Connector · Custom Connector · HTTP Node |
-| 024 | [Multi-Agent Composition and Connected Agent Patterns](gems/GEM-024-multi-agent-composition-and-connected-agent-patterns.md) | Integration | ⭐⭐⭐⭐ | Child Agents · Connected CS Agents · External (A2A/Foundry/Fabric) |
-| 025 | [Custom Canvas and Embedded Agent UX](gems/GEM-025-custom-canvas-and-embedded-agent-ux-patterns.md) | UX | ⭐⭐–⭐⭐⭐⭐ | Default Embed · Web Chat Component · Fully Custom UI |
-| 026 | [Azure AI Search Advanced Integration](gems/GEM-026-azure-ai-search-advanced-integration.md) | Performance | ⭐⭐⭐–⭐⭐⭐⭐ | Native Knowledge Source · HTTP Direct · PA Search Flow |
-| 027 | [Deterministic Flows for Regulated Workflows](gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows.md) | UX | ⭐⭐⭐⭐ | Fully Manual · Hybrid Deterministic+Generative · State Machine |
-| 028 | [Grounding Agents in Enterprise Analytics Data](gems/GEM-028-grounding-agents-in-enterprise-analytics-data.md) | Integration | ⭐⭐⭐–⭐⭐⭐⭐ | Fabric Data Agent · PA + SQL Flows · HTTP + SQL |
+| 001 | [Persisting User Context Across Sessions](https://copilotstudiogems.sebbrochet.com/gems/GEM-001-persisting-user-context-across-sessions/) | Context & State | ⭐⭐⭐ | Dataverse · SharePoint · HTTP API |
+| 002 | [Persona-Adaptive Agent Instructions](https://copilotstudiogems.sebbrochet.com/gems/GEM-002-persona-adaptive-agent-instructions/) | Personalization | ⭐⭐⭐ | Branched Instructions · Multi-Agent · Prompt Tool |
+| 003 | [Tracing Agent Progress Before Response](https://copilotstudiogems.sebbrochet.com/gems/GEM-003-tracing-agent-progress-before-response/) | Observability | ⭐⭐–⭐⭐⭐ | Sequential Messages · LLM Self-Narration · Adaptive Card |
+| 004 | [Debug Mode for M365 Copilot Channel](https://copilotstudiogems.sebbrochet.com/gems/GEM-004-debug-mode-for-m365-copilot/) | Observability | ⭐⭐⭐ | Keyword Inline · App Insights · Adaptive Card Panel |
+| 005 | [Multi-Language Agent Response](https://copilotstudiogems.sebbrochet.com/gems/GEM-005-multi-language-agent-response/) | Personalization | ⭐⭐⭐ | Graph API Profile · LLM Auto-Detect · Explicit Choice |
+| 006 | [Adaptive Cards as Multi-Field Forms](https://copilotstudiogems.sebbrochet.com/gems/GEM-006-adaptive-cards-as-multi-field-forms/) | UX | ⭐⭐⭐ | Sequential Questions · Adaptive Card · Hybrid |
+| 007 | [Role-Based Feature Gating](https://copilotstudiogems.sebbrochet.com/gems/GEM-007-role-based-feature-gating/) | Security | ⭐⭐⭐ | Entra Groups · Token Claims · LLM Instructions |
+| 008 | [Knowledge Source Optimization](https://copilotstudiogems.sebbrochet.com/gems/GEM-008-knowledge-source-optimization/) | Performance | ⭐⭐ | Format Strategy · Content Chunking · Custom Instructions |
+| 009 | [Graceful Degradation and Fallback Chains](https://copilotstudiogems.sebbrochet.com/gems/GEM-009-graceful-degradation-and-fallback-chains/) | Integration | ⭐⭐⭐ | Error-Branch · Cached Response · Escalation |
+| 010 | [Agent-to-Human Handoff with Context](https://copilotstudiogems.sebbrochet.com/gems/GEM-010-agent-to-human-handoff-with-context/) | UX | ⭐⭐⭐–⭐⭐⭐⭐ | LLM Summary · Context Card · Omnichannel |
+| 011 | [Conversation Memory Within a Session](https://copilotstudiogems.sebbrochet.com/gems/GEM-011-conversation-memory-within-a-session/) | Context & State | ⭐⭐–⭐⭐⭐ | Accumulator · LLM Summary · Entity Tracking |
+| 012 | [Cost Estimation and Token Budget Management](https://copilotstudiogems.sebbrochet.com/gems/GEM-012-cost-estimation-and-token-budget-management/) | Performance | ⭐⭐⭐ | App Insights Tracking · Response Capping · Turn Limits |
+| 013 | [Testing Strategies for Multi-Agent Architectures](https://copilotstudiogems.sebbrochet.com/gems/GEM-013-testing-strategies-for-multi-agent-architectures/) | Observability | ⭐⭐⭐–⭐⭐⭐⭐ | Manual Script · Automated Keywords · LLM-as-Judge |
+| 014 | [Proactive Agent Messages and Event-Driven Conversations](https://copilotstudiogems.sebbrochet.com/gems/GEM-014-proactive-agent-messages-and-event-driven-conversations/) | Integration | ⭐⭐⭐⭐ | PA Teams Card · Bot Framework API · Platform Triggers |
+| 015 | [Dataverse CRUD Operations Patterns](https://copilotstudiogems.sebbrochet.com/gems/GEM-015-dataverse-crud-operations-patterns/) | Integration | ⭐⭐⭐ | Power Automate · HTTP Direct · Generative AI |
+| 016 | [Conversation Analytics and Quality Measurement](https://copilotstudiogems.sebbrochet.com/gems/GEM-016-conversation-analytics-and-quality-measurement/) | Observability | ⭐⭐–⭐⭐⭐ | Built-in Analytics · App Insights Custom · CSAT Survey |
+| 017 | [Multi-Tenant Agent Configuration](https://copilotstudiogems.sebbrochet.com/gems/GEM-017-multi-tenant-agent-configuration/) | Context & State | ⭐⭐⭐⭐ | Env per Environment · Runtime Config Table · Git Branching |
+| 018 | [SharePoint Document Retrieval and Display](https://copilotstudiogems.sebbrochet.com/gems/GEM-018-sharepoint-document-retrieval-and-display/) | Integration | ⭐⭐⭐ | PA + SharePoint Search · Graph Search API · Generative Discovery |
+| 020 | [Agent Instructions as Living Documents](https://copilotstudiogems.sebbrochet.com/gems/GEM-020-agent-instructions-as-living-documents/) | Personalization | ⭐⭐⭐⭐ | YAML + Git · Dataverse Store · Markdown Fragments |
+| 021 | [Conversation Branching and Disambiguation](https://copilotstudiogems.sebbrochet.com/gems/GEM-021-conversation-branching-and-disambiguation/) | UX | ⭐⭐⭐ | Disambiguation Topic · LLM Inference · Trigger Engineering |
+| 022 | [Secure Data Handling in Conversations](https://copilotstudiogems.sebbrochet.com/gems/GEM-022-secure-data-handling-in-conversations/) | Security | ⭐⭐⭐⭐ | Instruction Prevention · Input Sanitizer · Telemetry Redaction |
+| 023 | [MCP Connector Integration Patterns](https://copilotstudiogems.sebbrochet.com/gems/GEM-023-mcp-connector-integration-patterns/) | Integration | ⭐⭐⭐ | MCP Connector · Custom Connector · HTTP Node |
+| 024 | [Multi-Agent Composition and Connected Agent Patterns](https://copilotstudiogems.sebbrochet.com/gems/GEM-024-multi-agent-composition-and-connected-agent-patterns/) | Integration | ⭐⭐⭐⭐ | Child Agents · Connected CS Agents · External (A2A/Foundry/Fabric) |
+| 025 | [Custom Canvas and Embedded Agent UX](https://copilotstudiogems.sebbrochet.com/gems/GEM-025-custom-canvas-and-embedded-agent-ux-patterns/) | UX | ⭐⭐–⭐⭐⭐⭐ | Default Embed · Web Chat Component · Fully Custom UI |
+| 026 | [Azure AI Search Advanced Integration](https://copilotstudiogems.sebbrochet.com/gems/GEM-026-azure-ai-search-advanced-integration/) | Performance | ⭐⭐⭐–⭐⭐⭐⭐ | Native Knowledge Source · HTTP Direct · PA Search Flow |
+| 027 | [Deterministic Flows for Regulated Workflows](https://copilotstudiogems.sebbrochet.com/gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows/) | UX | ⭐⭐⭐⭐ | Fully Manual · Hybrid Deterministic+Generative · State Machine |
+| 028 | [Grounding Agents in Enterprise Analytics Data](https://copilotstudiogems.sebbrochet.com/gems/GEM-028-grounding-agents-in-enterprise-analytics-data/) | Integration | ⭐⭐⭐–⭐⭐⭐⭐ | Fabric Data Agent · PA + SQL Flows · HTTP + SQL |
 
 ### By Category
 
 | Category | Gems | Description |
 | - | - | - |
-| **Context & State** | [001](gems/GEM-001-persisting-user-context-across-sessions.md), [011](gems/GEM-011-conversation-memory-within-a-session.md), [017](gems/GEM-017-multi-tenant-agent-configuration.md) | Persistence, memory, multi-tenant config |
-| **Personalization** | [002](gems/GEM-002-persona-adaptive-agent-instructions.md), [005](gems/GEM-005-multi-language-agent-response.md), [020](gems/GEM-020-agent-instructions-as-living-documents.md) | Adapting behavior, language, instruction lifecycle |
-| **Observability** | [003](gems/GEM-003-tracing-agent-progress-before-response.md), [004](gems/GEM-004-debug-mode-for-m365-copilot.md), [013](gems/GEM-013-testing-strategies-for-multi-agent-architectures.md), [016](gems/GEM-016-conversation-analytics-and-quality-measurement.md) | Tracing, debugging, testing, analytics |
-| **Security** | [007](gems/GEM-007-role-based-feature-gating.md), [022](gems/GEM-022-secure-data-handling-in-conversations.md) | Auth, access control, data protection |
-| **UX** | [006](gems/GEM-006-adaptive-cards-as-multi-field-forms.md), [010](gems/GEM-010-agent-to-human-handoff-with-context.md), [021](gems/GEM-021-conversation-branching-and-disambiguation.md), [025](gems/GEM-025-custom-canvas-and-embedded-agent-ux-patterns.md), [027](gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows.md) | Conversation design, forms, disambiguation, embedding, compliance flows |
-| **Integration** | [009](gems/GEM-009-graceful-degradation-and-fallback-chains.md), [014](gems/GEM-014-proactive-agent-messages-and-event-driven-conversations.md), [015](gems/GEM-015-dataverse-crud-operations-patterns.md), [018](gems/GEM-018-sharepoint-document-retrieval-and-display.md), [023](gems/GEM-023-mcp-connector-integration-patterns.md), [024](gems/GEM-024-multi-agent-composition-and-connected-agent-patterns.md), [028](gems/GEM-028-grounding-agents-in-enterprise-analytics-data.md) | External systems, events, data operations, MCP, multi-agent, analytics, document retrieval |
-| **Performance** | [008](gems/GEM-008-knowledge-source-optimization.md), [012](gems/GEM-012-cost-estimation-and-token-budget-management.md), [026](gems/GEM-026-azure-ai-search-advanced-integration.md) | Knowledge quality, cost control, enterprise search |
+| **Context & State** | [001](https://copilotstudiogems.sebbrochet.com/gems/GEM-001-persisting-user-context-across-sessions/), [011](https://copilotstudiogems.sebbrochet.com/gems/GEM-011-conversation-memory-within-a-session/), [017](https://copilotstudiogems.sebbrochet.com/gems/GEM-017-multi-tenant-agent-configuration/) | Persistence, memory, multi-tenant config |
+| **Personalization** | [002](https://copilotstudiogems.sebbrochet.com/gems/GEM-002-persona-adaptive-agent-instructions/), [005](https://copilotstudiogems.sebbrochet.com/gems/GEM-005-multi-language-agent-response/), [020](https://copilotstudiogems.sebbrochet.com/gems/GEM-020-agent-instructions-as-living-documents/) | Adapting behavior, language, instruction lifecycle |
+| **Observability** | [003](https://copilotstudiogems.sebbrochet.com/gems/GEM-003-tracing-agent-progress-before-response/), [004](https://copilotstudiogems.sebbrochet.com/gems/GEM-004-debug-mode-for-m365-copilot/), [013](https://copilotstudiogems.sebbrochet.com/gems/GEM-013-testing-strategies-for-multi-agent-architectures/), [016](https://copilotstudiogems.sebbrochet.com/gems/GEM-016-conversation-analytics-and-quality-measurement/) | Tracing, debugging, testing, analytics |
+| **Security** | [007](https://copilotstudiogems.sebbrochet.com/gems/GEM-007-role-based-feature-gating/), [022](https://copilotstudiogems.sebbrochet.com/gems/GEM-022-secure-data-handling-in-conversations/) | Auth, access control, data protection |
+| **UX** | [006](https://copilotstudiogems.sebbrochet.com/gems/GEM-006-adaptive-cards-as-multi-field-forms/), [010](https://copilotstudiogems.sebbrochet.com/gems/GEM-010-agent-to-human-handoff-with-context/), [021](https://copilotstudiogems.sebbrochet.com/gems/GEM-021-conversation-branching-and-disambiguation/), [025](https://copilotstudiogems.sebbrochet.com/gems/GEM-025-custom-canvas-and-embedded-agent-ux-patterns/), [027](https://copilotstudiogems.sebbrochet.com/gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows/) | Conversation design, forms, disambiguation, embedding, compliance flows |
+| **Integration** | [009](https://copilotstudiogems.sebbrochet.com/gems/GEM-009-graceful-degradation-and-fallback-chains/), [014](https://copilotstudiogems.sebbrochet.com/gems/GEM-014-proactive-agent-messages-and-event-driven-conversations/), [015](https://copilotstudiogems.sebbrochet.com/gems/GEM-015-dataverse-crud-operations-patterns/), [018](https://copilotstudiogems.sebbrochet.com/gems/GEM-018-sharepoint-document-retrieval-and-display/), [023](https://copilotstudiogems.sebbrochet.com/gems/GEM-023-mcp-connector-integration-patterns/), [024](https://copilotstudiogems.sebbrochet.com/gems/GEM-024-multi-agent-composition-and-connected-agent-patterns/), [028](https://copilotstudiogems.sebbrochet.com/gems/GEM-028-grounding-agents-in-enterprise-analytics-data/) | External systems, events, data operations, MCP, multi-agent, analytics, document retrieval |
+| **Performance** | [008](https://copilotstudiogems.sebbrochet.com/gems/GEM-008-knowledge-source-optimization/), [012](https://copilotstudiogems.sebbrochet.com/gems/GEM-012-cost-estimation-and-token-budget-management/), [026](https://copilotstudiogems.sebbrochet.com/gems/GEM-026-azure-ai-search-advanced-integration/) | Knowledge quality, cost control, enterprise search |
 
 ---
 
@@ -88,16 +88,16 @@ GEM-002: Persona Adaptation← Builds on GEM-001 (persisted persona)
 
 | Challenge | Start With | Then Read |
 | - | - | - |
-| Agent can't find answers in documents | [GEM-008](gems/GEM-008-knowledge-source-optimization.md) | [GEM-026](gems/GEM-026-azure-ai-search-advanced-integration.md) |
-| Need to debug in M365 Copilot | [GEM-004](gems/GEM-004-debug-mode-for-m365-copilot.md) | [GEM-016](gems/GEM-016-conversation-analytics-and-quality-measurement.md) |
-| Building multi-agent architecture | [GEM-024](gems/GEM-024-multi-agent-composition-and-connected-agent-patterns.md) | [GEM-013](gems/GEM-013-testing-strategies-for-multi-agent-architectures.md), [GEM-021](gems/GEM-021-conversation-branching-and-disambiguation.md) |
-| Collecting structured input from users | [GEM-006](gems/GEM-006-adaptive-cards-as-multi-field-forms.md) | [GEM-027](gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows.md) |
-| Connecting to external systems | [GEM-023](gems/GEM-023-mcp-connector-integration-patterns.md) | [GEM-009](gems/GEM-009-graceful-degradation-and-fallback-chains.md), [GEM-015](gems/GEM-015-dataverse-crud-operations-patterns.md) |
-| Security and compliance | [GEM-007](gems/GEM-007-role-based-feature-gating.md) | [GEM-022](gems/GEM-022-secure-data-handling-in-conversations.md), [GEM-027](gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows.md) |
-| Agent serves multiple languages/regions | [GEM-005](gems/GEM-005-multi-language-agent-response.md) | [GEM-001](gems/GEM-001-persisting-user-context-across-sessions.md), [GEM-017](gems/GEM-017-multi-tenant-agent-configuration.md) |
-| Measuring agent quality | [GEM-016](gems/GEM-016-conversation-analytics-and-quality-measurement.md) | [GEM-012](gems/GEM-012-cost-estimation-and-token-budget-management.md), [GEM-013](gems/GEM-013-testing-strategies-for-multi-agent-architectures.md) |
+| Agent can't find answers in documents | [GEM-008](https://copilotstudiogems.sebbrochet.com/gems/GEM-008-knowledge-source-optimization/) | [GEM-026](https://copilotstudiogems.sebbrochet.com/gems/GEM-026-azure-ai-search-advanced-integration/) |
+| Need to debug in M365 Copilot | [GEM-004](https://copilotstudiogems.sebbrochet.com/gems/GEM-004-debug-mode-for-m365-copilot/) | [GEM-016](https://copilotstudiogems.sebbrochet.com/gems/GEM-016-conversation-analytics-and-quality-measurement/) |
+| Building multi-agent architecture | [GEM-024](https://copilotstudiogems.sebbrochet.com/gems/GEM-024-multi-agent-composition-and-connected-agent-patterns/) | [GEM-013](https://copilotstudiogems.sebbrochet.com/gems/GEM-013-testing-strategies-for-multi-agent-architectures/), [GEM-021](https://copilotstudiogems.sebbrochet.com/gems/GEM-021-conversation-branching-and-disambiguation/) |
+| Collecting structured input from users | [GEM-006](https://copilotstudiogems.sebbrochet.com/gems/GEM-006-adaptive-cards-as-multi-field-forms/) | [GEM-027](https://copilotstudiogems.sebbrochet.com/gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows/) |
+| Connecting to external systems | [GEM-023](https://copilotstudiogems.sebbrochet.com/gems/GEM-023-mcp-connector-integration-patterns/) | [GEM-009](https://copilotstudiogems.sebbrochet.com/gems/GEM-009-graceful-degradation-and-fallback-chains/), [GEM-015](https://copilotstudiogems.sebbrochet.com/gems/GEM-015-dataverse-crud-operations-patterns/) |
+| Security and compliance | [GEM-007](https://copilotstudiogems.sebbrochet.com/gems/GEM-007-role-based-feature-gating/) | [GEM-022](https://copilotstudiogems.sebbrochet.com/gems/GEM-022-secure-data-handling-in-conversations/), [GEM-027](https://copilotstudiogems.sebbrochet.com/gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows/) |
+| Agent serves multiple languages/regions | [GEM-005](https://copilotstudiogems.sebbrochet.com/gems/GEM-005-multi-language-agent-response/) | [GEM-001](https://copilotstudiogems.sebbrochet.com/gems/GEM-001-persisting-user-context-across-sessions/), [GEM-017](https://copilotstudiogems.sebbrochet.com/gems/GEM-017-multi-tenant-agent-configuration/) |
+| Measuring agent quality | [GEM-016](https://copilotstudiogems.sebbrochet.com/gems/GEM-016-conversation-analytics-and-quality-measurement/) | [GEM-012](https://copilotstudiogems.sebbrochet.com/gems/GEM-012-cost-estimation-and-token-budget-management/), [GEM-013](https://copilotstudiogems.sebbrochet.com/gems/GEM-013-testing-strategies-for-multi-agent-architectures/) |
 
-Or browse the full [How to Read](docs/front-matter/how-to-read.md) guide for role-based paths and the complete Gem catalog.
+Or browse the full [How to Read](https://copilotstudiogems.sebbrochet.com/front-matter/how-to-read/) guide for role-based paths and the complete Gem catalog.
 
 ---
 
@@ -149,7 +149,7 @@ Every Gem follows this template:
 
 ## Contributing
 
-To add a new Gem, use the template in [docs/appendices/gem-template.md](docs/appendices/gem-template.md).
+To add a new Gem, use the template in [docs/appendices/gem-template.md](https://copilotstudiogems.sebbrochet.com/appendices/gem-template/).
 
 Key rules:
 

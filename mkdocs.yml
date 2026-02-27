@@ -1,7 +1,7 @@
 site_name: "Copilot Studio Gems"
 site_description: "Practical, evaluated patterns for building AI agents in Microsoft Copilot Studio"
 site_author: "Sébastien Brochet"
-site_url: "https://copilotstudiogems.github.io"
+site_url: "https://copilotstudiogems.sebbrochet.com"
 
 repo_url: "https://github.com/sebbrochet/copilotstudiogems"
 repo_name: "sebbrochet/copilotstudiogems"
