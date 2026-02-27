@@ -10,6 +10,8 @@
 
 **Practical, evaluated patterns for building AI agents in Microsoft Copilot Studio.**
 
+**[Read the full book online at copilotstudiogems.sebbrochet.com](https://copilotstudiogems.sebbrochet.com)** — with search, Mermaid diagrams, and cross-linked navigation.
+
 Inspired by [Game Programming Gems](https://www.satori.org/game-programming-gems/) and the [Gang of Four Design Patterns](https://en.wikipedia.org/wiki/Design_Patterns) — each Gem addresses a recurring challenge in agent development by evaluating multiple implementation approaches with honest trade-off analysis.
 
 ## Why Gems?
