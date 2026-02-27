@@ -1,0 +1,3537 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Practical, evaluated patterns for building AI agents in Microsoft Copilot Studio">
+      
+      
+        <meta name="author" content="Sébastien Brochet">
+      
+      
+        <link rel="canonical" href="https://copilotstudiogems.sebbrochet.com/gems/GEM-027-deterministic-conversation-flows-for-regulated-workflows/">
+      
+      
+        <link rel="prev" href="../GEM-025-custom-canvas-and-embedded-agent-ux-patterns/">
+      
+      
+        <link rel="next" href="../../parts/part-4/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>GEM-027: Regulated Flows - Copilot Studio Gems</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gem-027-deterministic-conversation-flows-for-regulated-workflows" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Copilot Studio Gems" class="md-header__button md-logo" aria-label="Copilot Studio Gems" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 9h3l-5 7m-4-7h4l-2 8M5 9h3l2 7m5-12h2l2 3h-3m-5-3h2l1 3h-4M7 4h2L8 7H5m1-5L2 8l10 14L22 8l-4-6z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Copilot Studio Gems
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              GEM-027: Regulated Flows
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sebbrochet/copilotstudiogems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sebbrochet/copilotstudiogems
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Copilot Studio Gems
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../front-matter/foreword/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Foreword
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../front-matter/how-to-read/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Read
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-1/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  I. State
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-2/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  II. Persona
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../parts/part-3/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  III. UX
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-4/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  IV. Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-5/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  V. Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-6/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  VI. Knowledge
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-7/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  VII. Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../appendices/gem-template/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Appendices
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Copilot Studio Gems" class="md-nav__button md-logo" aria-label="Copilot Studio Gems" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 9h3l-5 7m-4-7h4l-2 8M5 9h3l2 7m5-12h2l2 3h-3m-5-3h2l1 3h-4M7 4h2L8 7H5m1-5L2 8l10 14L22 8l-4-6z"/></svg>
+
+    </a>
+    Copilot Studio Gems
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sebbrochet/copilotstudiogems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sebbrochet/copilotstudiogems
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copilot Studio Gems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../front-matter/foreword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foreword
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../front-matter/how-to-read/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Read
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. State
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. State
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part I — Foundations: State &amp; Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-001-persisting-user-context-across-sessions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-001: User Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-011-conversation-memory-within-a-session/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-011: Session Memory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-017-multi-tenant-agent-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-017: Multi-Tenant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Persona
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Persona
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part II — Personalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-002-persona-adaptive-agent-instructions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-002: Persona Adaptation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-005-multi-language-agent-response/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-005: Multi-Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-020-agent-instructions-as-living-documents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-020: Living Instructions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. UX
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. UX
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part III — Conversation UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-006-adaptive-cards-as-multi-field-forms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-006: Card Forms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-010-agent-to-human-handoff-with-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-010: Human Handoff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-021-conversation-branching-and-disambiguation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-021: Disambiguation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-025-custom-canvas-and-embedded-agent-ux-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-025: Custom Canvas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-027: Regulated Flows
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-027: Regulated Flows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-ideal-outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Ideal Outcome
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approaches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Approaches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#approach-a-fully-manual-topic-authoring-no-generative-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach A: Fully Manual Topic Authoring (No Generative AI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-b-hybrid-deterministic-steps-generative-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach B: Hybrid — Deterministic Steps + Generative Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-c-state-machine-with-power-automate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach C: State Machine with Power Automate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Approach
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-gems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Gems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part IV — Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-007-role-based-feature-gating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-007: Role Gating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-022-secure-data-handling-in-conversations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-022: Secure Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part V — Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-009-graceful-degradation-and-fallback-chains/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-009: Fallback Chains
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-014-proactive-agent-messages-and-event-driven-conversations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-014: Proactive Msgs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-015-dataverse-crud-operations-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-015: Dataverse CRUD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-018-sharepoint-document-retrieval-and-display/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-018: SharePoint Docs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-023-mcp-connector-integration-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-023: MCP Connectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-024-multi-agent-composition-and-connected-agent-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-024: Multi-Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-028-grounding-agents-in-enterprise-analytics-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-028: Fabric Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Knowledge
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Knowledge
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part VI — Knowledge &amp; Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-008-knowledge-source-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-008: Knowledge Optim.
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-012-cost-estimation-and-token-budget-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-012: Token Budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-026-azure-ai-search-advanced-integration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-026: AI Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Ops
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Ops
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part VII — Observability &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-003-tracing-agent-progress-before-response/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-003: Progress Tracing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-004-debug-mode-for-m365-copilot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-004: Debug Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-013-testing-strategies-for-multi-agent-architectures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-013: Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-016-conversation-analytics-and-quality-measurement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-016: Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Appendices
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Appendices
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/gem-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A: Gem Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/platform-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    B: Platform Ref
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/gotchas-compendium/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C: Gotchas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/decision-frameworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D: Decisions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/about-author/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-ideal-outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Ideal Outcome
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approaches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Approaches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#approach-a-fully-manual-topic-authoring-no-generative-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach A: Fully Manual Topic Authoring (No Generative AI)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-b-hybrid-deterministic-steps-generative-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach B: Hybrid — Deterministic Steps + Generative Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-c-state-machine-with-power-automate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach C: State Machine with Power Automate
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Approach
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-gems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Gems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="gem-027-deterministic-conversation-flows-for-regulated-workflows">Gem 027: Deterministic Conversation Flows for Regulated Workflows<a class="headerlink" href="#gem-027-deterministic-conversation-flows-for-regulated-workflows" title="Permanent link">&para;</a></h1>
+<p><em>When the LLM's creativity is a liability — build flows that MUST follow the script.</em></p>
+<h2 id="classification">Classification<a class="headerlink" href="#classification" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Category</strong></td>
+<td>UX</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>⭐⭐⭐⭐ (Complex — architecture decision with legal/compliance implications)</td>
+</tr>
+<tr>
+<td><strong>Channels</strong></td>
+<td>All</td>
+</tr>
+<tr>
+<td><strong>Prerequisite Gems</strong></td>
+<td><a href="../GEM-022-secure-data-handling-in-conversations/">Gem 022</a> (secure data handling for regulated contexts)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
+<p>Every other Gem in this collection leverages generative AI — the LLM's ability to understand natural language, synthesize answers, and adapt to context. But some conversations <strong>must not be left to the LLM's judgment</strong>:</p>
+<ul>
+<li><strong>KYC (Know Your Customer) verification</strong>: "Please confirm your date of birth, government ID number, and address." — The agent MUST collect all three fields. It CANNOT decide to skip one because "the user seems verified."</li>
+<li><strong>GDPR consent collection</strong>: "Do you consent to data processing as described in our privacy policy? [Yes/No]" — The response MUST be logged with a timestamp. The agent CANNOT paraphrase the consent question or infer consent from context.</li>
+<li><strong>Medical intake</strong>: "Are you currently experiencing chest pain? [Yes/No]" — The agent MUST ask this exact question in this exact order. It CANNOT reorder the triage questions based on "what seems most relevant."</li>
+<li><strong>Legal disclaimer acknowledgment</strong>: "By proceeding, you acknowledge that this is not legal advice." — The agent MUST display this text verbatim before providing any legal-adjacent information.</li>
+<li><strong>Audit procedures</strong>: "Step 4 of 7: Verify that the backup script ran successfully." — The agent MUST NOT allow the user to skip to step 7.</li>
+</ul>
+<p>The fundamental tension: <strong>Copilot Studio's generative orchestration is designed to be flexible and adaptive. Regulated workflows require the opposite — rigid, deterministic, and auditable.</strong></p>
+<p>When the LLM decides to "helpfully" skip a consent question because the user said "yeah, sure, whatever," your organization faces legal liability. When the LLM paraphrases a legal disclaimer, the paraphrase may not be legally valid.</p>
+<h2 id="the-ideal-outcome">The Ideal Outcome<a class="headerlink" href="#the-ideal-outcome" title="Permanent link">&para;</a></h2>
+<p>A conversation flow that meets regulatory requirements:</p>
+<ul>
+<li>[ ] <strong>Deterministic sequencing</strong>: Steps execute in a fixed order. No step can be skipped.</li>
+<li>[ ] <strong>Verbatim messages</strong>: Regulatory text is displayed exactly as written — not paraphrased by the LLM.</li>
+<li>[ ] <strong>Complete audit trail</strong>: Every step, every user response, and every timestamp is logged.</li>
+<li>[ ] <strong>No LLM interpretation of regulated content</strong>: The LLM doesn't process, summarize, or modify regulated text.</li>
+<li>[ ] <strong>Graceful integration</strong>: Regulated flows coexist with generative features in the same agent.</li>
+</ul>
+<h2 id="approaches">Approaches<a class="headerlink" href="#approaches" title="Permanent link">&para;</a></h2>
+<h3 id="approach-a-fully-manual-topic-authoring-no-generative-ai">Approach A: Fully Manual Topic Authoring (No Generative AI)<a class="headerlink" href="#approach-a-fully-manual-topic-authoring-no-generative-ai" title="Permanent link">&para;</a></h3>
+<p><strong>Summary</strong>: Build the regulated flow as a 100% manually-authored topic. Every message is a <code>SendActivity</code> with static text. Every input is a <code>Question</code> with explicit validation. No <code>SearchAndSummarizeContent</code>, no Prompt Tools, no generative orchestration.<br />
+<strong>Technique</strong>: Manual <code>AdaptiveDialog</code> with sequential nodes, hardcoded text, <code>LogCustomTelemetryEvent</code> for audit.</p>
+<h4 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h4>
+<div class="language-Text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Step 1: Display disclaimer    → Static SendActivity (verbatim text)
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Step 2: Collect consent       → Question (Boolean, required)
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Step 3: Verify identity       → Question (text + validation)
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Step 4: Collect data field A  → Question (entity validation)
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>Step 5: Collect data field B  → Question (entity validation)
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>Step 6: Confirmation summary  → SendActivity (formatted summary)
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>Step 7: Submit                → InvokeFlow (persist to Dataverse)
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>Step 8: Audit log             → LogCustomTelemetryEvent
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>No LLM is involved at any point. Every message, every question, every response is explicit.
+</span></code></pre></div>
+<h4 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h4>
+<p><strong>Step 1: Create a deterministic intake topic</strong></p>
+<p>Example: GDPR consent collection + data processing request.</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AdaptiveDialog</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">startBehavior</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CancelOtherTopics</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="nt">beginDialog</span><span class="p">:</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnRecognizedIntent</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">  </span><span class="nt">intent</span><span class="p">:</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Data Processing Request</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">includeInOnSelectIntent</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">triggerQueries</span><span class="p">:</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;data</span><span class="nv"> </span><span class="s">processing</span><span class="nv"> </span><span class="s">request&quot;</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;process</span><span class="nv"> </span><span class="s">my</span><span class="nv"> </span><span class="s">data&quot;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;GDPR</span><span class="nv"> </span><span class="s">request&quot;</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;data</span><span class="nv"> </span><span class="s">subject</span><span class="nv"> </span><span class="s">request&quot;</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">  </span><span class="nt">actions</span><span class="p">:</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="w">    </span><span class="c1"># STEP 1: Legal Disclaimer (VERBATIM — do not modify)</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step1_disclaimer</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">      </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">        </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;**Important</span><span class="nv"> </span><span class="s">Legal</span><span class="nv"> </span><span class="s">Notice**\n\nThis</span><span class="nv"> </span><span class="s">process</span><span class="nv"> </span><span class="s">collects</span><span class="nv"> </span><span class="s">personal</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">purpose</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">fulfilling</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">subject</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">under</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">General</span><span class="nv"> </span><span class="s">Data</span><span class="nv"> </span><span class="s">Protection</span><span class="nv"> </span><span class="s">Regulation</span><span class="nv"> </span><span class="s">(GDPR),</span><span class="nv"> </span><span class="s">Article</span><span class="nv"> </span><span class="s">15-22.\n\nBy</span><span class="nv"> </span><span class="s">proceeding,</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">acknowledge</span><span class="nv"> </span><span class="s">that:\n1.</span><span class="nv"> </span><span class="s">You</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">requesting</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">action</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">own</span><span class="nv"> </span><span class="s">behalf,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">legal</span><span class="nv"> </span><span class="s">authority</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">do</span><span class="nv"> </span><span class="s">so.\n2.</span><span class="nv"> </span><span class="s">We</span><span class="nv"> </span><span class="s">will</span><span class="nv"> </span><span class="s">verify</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">identity</span><span class="nv"> </span><span class="s">before</span><span class="nv"> </span><span class="s">processing.\n3.</span><span class="nv"> </span><span class="s">Processing</span><span class="nv"> </span><span class="s">may</span><span class="nv"> </span><span class="s">take</span><span class="nv"> </span><span class="s">up</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">30</span><span class="nv"> </span><span class="s">calendar</span><span class="nv"> </span><span class="s">days.\n4.</span><span class="nv"> </span><span class="s">Submitted</span><span class="nv"> </span><span class="s">requests</span><span class="nv"> </span><span class="s">cannot</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">modified</span><span class="nv"> </span><span class="s">after</span><span class="nv"> </span><span class="s">submission.\n\nFor</span><span class="nv"> </span><span class="s">questions</span><span class="nv"> </span><span class="s">about</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">process,</span><span class="nv"> </span><span class="s">contact</span><span class="nv"> </span><span class="s">privacy@contoso.com.&quot;</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">    </span><span class="c1"># Log: disclaimer displayed</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LogCustomTelemetryEvent</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audit_disclaimer</span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">      </span><span class="nt">eventName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegulatedFlowAudit</span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">      </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;={FlowName:</span><span class="nv"> </span><span class="s">\&quot;GDPRDataRequest\&quot;,</span><span class="nv"> </span><span class="s">Step:</span><span class="nv"> </span><span class="s">\&quot;1_DisclaimerDisplayed\&quot;,</span><span class="nv"> </span><span class="s">UserId:</span><span class="nv"> </span><span class="s">System.User.Id,</span><span class="nv"> </span><span class="s">ConversationId:</span><span class="nv"> </span><span class="s">System.Conversation.Id,</span><span class="nv"> </span><span class="s">Timestamp:</span><span class="nv"> </span><span class="s">Text(Now(),</span><span class="nv"> </span><span class="s">DateTimeFormat.UTC)}&quot;</span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">    </span><span class="c1"># STEP 2: Explicit Consent (required, no skip)</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step2_consent</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.UserConsent</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">      </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Do</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">acknowledge</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">terms</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">wish</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">proceed?\n\n**You</span><span class="nv"> </span><span class="s">must</span><span class="nv"> </span><span class="s">select</span><span class="nv"> </span><span class="s">Yes</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">No</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">continue.**&quot;</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">      </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BooleanPrebuiltEntity</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">      </span><span class="nt">alwaysPrompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">    </span><span class="c1"># Gate: Must consent to continue</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConditionGroup</span>
+</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkConsent</span>
+</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a><span class="w">      </span><span class="nt">conditions</span><span class="p">:</span>
+</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">consentGiven</span>
+</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a><span class="w">          </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.UserConsent = true</span>
+</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a><span class="w">          </span><span class="nt">actions</span><span class="p">:</span>
+</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LogCustomTelemetryEvent</span>
+</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audit_consent</span>
+</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a><span class="w">              </span><span class="nt">eventName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegulatedFlowAudit</span>
+</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a><span class="w">              </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;={FlowName:</span><span class="nv"> </span><span class="s">\&quot;GDPRDataRequest\&quot;,</span><span class="nv"> </span><span class="s">Step:</span><span class="nv"> </span><span class="s">\&quot;2_ConsentGiven\&quot;,</span><span class="nv"> </span><span class="s">Consent:</span><span class="nv"> </span><span class="s">true,</span><span class="nv"> </span><span class="s">UserId:</span><span class="nv"> </span><span class="s">System.User.Id,</span><span class="nv"> </span><span class="s">ConversationId:</span><span class="nv"> </span><span class="s">System.Conversation.Id,</span><span class="nv"> </span><span class="s">Timestamp:</span><span class="nv"> </span><span class="s">Text(Now(),</span><span class="nv"> </span><span class="s">DateTimeFormat.UTC)}&quot;</span>
+</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a><span class="w">      </span><span class="nt">elseActions</span><span class="p">:</span>
+</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">consentDeclined</span>
+</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a><span class="w">          </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a><span class="w">            </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a><span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Understood.</span><span class="nv"> </span><span class="s">Your</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">cancelled.</span><span class="nv"> </span><span class="s">No</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">collected</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">processed.\n\nIf</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">change</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">mind,</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">can</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">new</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">any</span><span class="nv"> </span><span class="s">time.&quot;</span>
+</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LogCustomTelemetryEvent</span>
+</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audit_declined</span>
+</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a><span class="w">          </span><span class="nt">eventName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegulatedFlowAudit</span>
+</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a><span class="w">          </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;={FlowName:</span><span class="nv"> </span><span class="s">\&quot;GDPRDataRequest\&quot;,</span><span class="nv"> </span><span class="s">Step:</span><span class="nv"> </span><span class="s">\&quot;2_ConsentDeclined\&quot;,</span><span class="nv"> </span><span class="s">Consent:</span><span class="nv"> </span><span class="s">false,</span><span class="nv"> </span><span class="s">UserId:</span><span class="nv"> </span><span class="s">System.User.Id,</span><span class="nv"> </span><span class="s">ConversationId:</span><span class="nv"> </span><span class="s">System.Conversation.Id,</span><span class="nv"> </span><span class="s">Timestamp:</span><span class="nv"> </span><span class="s">Text(Now(),</span><span class="nv"> </span><span class="s">DateTimeFormat.UTC)}&quot;</span>
+</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EndDialog</span>
+</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">endOnDecline</span>
+</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a><span class="w">          </span><span class="nt">clearTopicQueue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>
+</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a><span class="w">    </span><span class="c1"># STEP 3: Identity Verification (required)</span>
+</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-68"><a id="__codelineno-1-68" name="__codelineno-1-68" href="#__codelineno-1-68"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-1-69"><a id="__codelineno-1-69" name="__codelineno-1-69" href="#__codelineno-1-69"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step3_fullName</span>
+</span><span id="__span-1-70"><a id="__codelineno-1-70" name="__codelineno-1-70" href="#__codelineno-1-70"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.FullName</span>
+</span><span id="__span-1-71"><a id="__codelineno-1-71" name="__codelineno-1-71" href="#__codelineno-1-71"></a><span class="w">      </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;**Step</span><span class="nv"> </span><span class="s">1</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">3:</span><span class="nv"> </span><span class="s">Identity</span><span class="nv"> </span><span class="s">Verification**\n\nPlease</span><span class="nv"> </span><span class="s">provide</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">full</span><span class="nv"> </span><span class="s">legal</span><span class="nv"> </span><span class="s">name</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">appears</span><span class="nv"> </span><span class="s">on</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">employment</span><span class="nv"> </span><span class="s">contract:&quot;</span>
+</span><span id="__span-1-72"><a id="__codelineno-1-72" name="__codelineno-1-72" href="#__codelineno-1-72"></a><span class="w">      </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PersonNamePrebuiltEntity</span>
+</span><span id="__span-1-73"><a id="__codelineno-1-73" name="__codelineno-1-73" href="#__codelineno-1-73"></a><span class="w">      </span><span class="nt">alwaysPrompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-1-74"><a id="__codelineno-1-74" name="__codelineno-1-74" href="#__codelineno-1-74"></a>
+</span><span id="__span-1-75"><a id="__codelineno-1-75" name="__codelineno-1-75" href="#__codelineno-1-75"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-1-76"><a id="__codelineno-1-76" name="__codelineno-1-76" href="#__codelineno-1-76"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step3_email</span>
+</span><span id="__span-1-77"><a id="__codelineno-1-77" name="__codelineno-1-77" href="#__codelineno-1-77"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.VerifyEmail</span>
+</span><span id="__span-1-78"><a id="__codelineno-1-78" name="__codelineno-1-78" href="#__codelineno-1-78"></a><span class="w">      </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Please</span><span class="nv"> </span><span class="s">provide</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">company</span><span class="nv"> </span><span class="s">email</span><span class="nv"> </span><span class="s">address</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">verification:&quot;</span>
+</span><span id="__span-1-79"><a id="__codelineno-1-79" name="__codelineno-1-79" href="#__codelineno-1-79"></a><span class="w">      </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EmailPrebuiltEntity</span>
+</span><span id="__span-1-80"><a id="__codelineno-1-80" name="__codelineno-1-80" href="#__codelineno-1-80"></a><span class="w">      </span><span class="nt">alwaysPrompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-1-81"><a id="__codelineno-1-81" name="__codelineno-1-81" href="#__codelineno-1-81"></a>
+</span><span id="__span-1-82"><a id="__codelineno-1-82" name="__codelineno-1-82" href="#__codelineno-1-82"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-1-83"><a id="__codelineno-1-83" name="__codelineno-1-83" href="#__codelineno-1-83"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step3_employeeId</span>
+</span><span id="__span-1-84"><a id="__codelineno-1-84" name="__codelineno-1-84" href="#__codelineno-1-84"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.EmployeeId</span>
+</span><span id="__span-1-85"><a id="__codelineno-1-85" name="__codelineno-1-85" href="#__codelineno-1-85"></a><span class="w">      </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Please</span><span class="nv"> </span><span class="s">provide</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">Employee</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">(format:</span><span class="nv"> </span><span class="s">E-XXXXX):&quot;</span>
+</span><span id="__span-1-86"><a id="__codelineno-1-86" name="__codelineno-1-86" href="#__codelineno-1-86"></a><span class="w">      </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StringPrebuiltEntity</span>
+</span><span id="__span-1-87"><a id="__codelineno-1-87" name="__codelineno-1-87" href="#__codelineno-1-87"></a><span class="w">      </span><span class="nt">alwaysPrompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-1-88"><a id="__codelineno-1-88" name="__codelineno-1-88" href="#__codelineno-1-88"></a>
+</span><span id="__span-1-89"><a id="__codelineno-1-89" name="__codelineno-1-89" href="#__codelineno-1-89"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LogCustomTelemetryEvent</span>
+</span><span id="__span-1-90"><a id="__codelineno-1-90" name="__codelineno-1-90" href="#__codelineno-1-90"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audit_identity</span>
+</span><span id="__span-1-91"><a id="__codelineno-1-91" name="__codelineno-1-91" href="#__codelineno-1-91"></a><span class="w">      </span><span class="nt">eventName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegulatedFlowAudit</span>
+</span><span id="__span-1-92"><a id="__codelineno-1-92" name="__codelineno-1-92" href="#__codelineno-1-92"></a><span class="w">      </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;={FlowName:</span><span class="nv"> </span><span class="s">\&quot;GDPRDataRequest\&quot;,</span><span class="nv"> </span><span class="s">Step:</span><span class="nv"> </span><span class="s">\&quot;3_IdentityCollected\&quot;,</span><span class="nv"> </span><span class="s">EmailProvided:</span><span class="nv"> </span><span class="s">!IsBlank(Topic.VerifyEmail),</span><span class="nv"> </span><span class="s">UserId:</span><span class="nv"> </span><span class="s">System.User.Id,</span><span class="nv"> </span><span class="s">ConversationId:</span><span class="nv"> </span><span class="s">System.Conversation.Id,</span><span class="nv"> </span><span class="s">Timestamp:</span><span class="nv"> </span><span class="s">Text(Now(),</span><span class="nv"> </span><span class="s">DateTimeFormat.UTC)}&quot;</span>
+</span><span id="__span-1-93"><a id="__codelineno-1-93" name="__codelineno-1-93" href="#__codelineno-1-93"></a>
+</span><span id="__span-1-94"><a id="__codelineno-1-94" name="__codelineno-1-94" href="#__codelineno-1-94"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-95"><a id="__codelineno-1-95" name="__codelineno-1-95" href="#__codelineno-1-95"></a><span class="w">    </span><span class="c1"># STEP 4: Request Details (required)</span>
+</span><span id="__span-1-96"><a id="__codelineno-1-96" name="__codelineno-1-96" href="#__codelineno-1-96"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-97"><a id="__codelineno-1-97" name="__codelineno-1-97" href="#__codelineno-1-97"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-1-98"><a id="__codelineno-1-98" name="__codelineno-1-98" href="#__codelineno-1-98"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step4_requestType</span>
+</span><span id="__span-1-99"><a id="__codelineno-1-99" name="__codelineno-1-99" href="#__codelineno-1-99"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.RequestType</span>
+</span><span id="__span-1-100"><a id="__codelineno-1-100" name="__codelineno-1-100" href="#__codelineno-1-100"></a><span class="w">      </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;**Step</span><span class="nv"> </span><span class="s">2</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">3:</span><span class="nv"> </span><span class="s">Request</span><span class="nv"> </span><span class="s">Type**\n\nWhat</span><span class="nv"> </span><span class="s">type</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">would</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">like</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">make?&quot;</span>
+</span><span id="__span-1-101"><a id="__codelineno-1-101" name="__codelineno-1-101" href="#__codelineno-1-101"></a><span class="w">      </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ChoicePrebuiltEntity</span>
+</span><span id="__span-1-102"><a id="__codelineno-1-102" name="__codelineno-1-102" href="#__codelineno-1-102"></a><span class="w">      </span><span class="nt">alwaysPrompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-1-103"><a id="__codelineno-1-103" name="__codelineno-1-103" href="#__codelineno-1-103"></a><span class="w">      </span><span class="nt">choiceOptions</span><span class="p">:</span>
+</span><span id="__span-1-104"><a id="__codelineno-1-104" name="__codelineno-1-104" href="#__codelineno-1-104"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Access&quot;</span>
+</span><span id="__span-1-105"><a id="__codelineno-1-105" name="__codelineno-1-105" href="#__codelineno-1-105"></a><span class="w">          </span><span class="nt">synonyms</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;view</span><span class="nv"> </span><span class="s">my</span><span class="nv"> </span><span class="s">data&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;see</span><span class="nv"> </span><span class="s">my</span><span class="nv"> </span><span class="s">data&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Article</span><span class="nv"> </span><span class="s">15&quot;</span><span class="p p-Indicator">]</span>
+</span><span id="__span-1-106"><a id="__codelineno-1-106" name="__codelineno-1-106" href="#__codelineno-1-106"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Rectification&quot;</span>
+</span><span id="__span-1-107"><a id="__codelineno-1-107" name="__codelineno-1-107" href="#__codelineno-1-107"></a><span class="w">          </span><span class="nt">synonyms</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;correct</span><span class="nv"> </span><span class="s">my</span><span class="nv"> </span><span class="s">data&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;fix</span><span class="nv"> </span><span class="s">my</span><span class="nv"> </span><span class="s">data&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Article</span><span class="nv"> </span><span class="s">16&quot;</span><span class="p p-Indicator">]</span>
+</span><span id="__span-1-108"><a id="__codelineno-1-108" name="__codelineno-1-108" href="#__codelineno-1-108"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Erasure&quot;</span>
+</span><span id="__span-1-109"><a id="__codelineno-1-109" name="__codelineno-1-109" href="#__codelineno-1-109"></a><span class="w">          </span><span class="nt">synonyms</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;delete</span><span class="nv"> </span><span class="s">my</span><span class="nv"> </span><span class="s">data&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;right</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">forgotten&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Article</span><span class="nv"> </span><span class="s">17&quot;</span><span class="p p-Indicator">]</span>
+</span><span id="__span-1-110"><a id="__codelineno-1-110" name="__codelineno-1-110" href="#__codelineno-1-110"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Portability&quot;</span>
+</span><span id="__span-1-111"><a id="__codelineno-1-111" name="__codelineno-1-111" href="#__codelineno-1-111"></a><span class="w">          </span><span class="nt">synonyms</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;export</span><span class="nv"> </span><span class="s">my</span><span class="nv"> </span><span class="s">data&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;download</span><span class="nv"> </span><span class="s">my</span><span class="nv"> </span><span class="s">data&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;Article</span><span class="nv"> </span><span class="s">20&quot;</span><span class="p p-Indicator">]</span>
+</span><span id="__span-1-112"><a id="__codelineno-1-112" name="__codelineno-1-112" href="#__codelineno-1-112"></a>
+</span><span id="__span-1-113"><a id="__codelineno-1-113" name="__codelineno-1-113" href="#__codelineno-1-113"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-1-114"><a id="__codelineno-1-114" name="__codelineno-1-114" href="#__codelineno-1-114"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step4_details</span>
+</span><span id="__span-1-115"><a id="__codelineno-1-115" name="__codelineno-1-115" href="#__codelineno-1-115"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.RequestDetails</span>
+</span><span id="__span-1-116"><a id="__codelineno-1-116" name="__codelineno-1-116" href="#__codelineno-1-116"></a><span class="w">      </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Please</span><span class="nv"> </span><span class="s">describe</span><span class="nv"> </span><span class="s">what</span><span class="nv"> </span><span class="s">specific</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">records</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">pertains</span><span class="nv"> </span><span class="s">to:&quot;</span>
+</span><span id="__span-1-117"><a id="__codelineno-1-117" name="__codelineno-1-117" href="#__codelineno-1-117"></a><span class="w">      </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StringPrebuiltEntity</span>
+</span><span id="__span-1-118"><a id="__codelineno-1-118" name="__codelineno-1-118" href="#__codelineno-1-118"></a><span class="w">      </span><span class="nt">alwaysPrompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-1-119"><a id="__codelineno-1-119" name="__codelineno-1-119" href="#__codelineno-1-119"></a>
+</span><span id="__span-1-120"><a id="__codelineno-1-120" name="__codelineno-1-120" href="#__codelineno-1-120"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LogCustomTelemetryEvent</span>
+</span><span id="__span-1-121"><a id="__codelineno-1-121" name="__codelineno-1-121" href="#__codelineno-1-121"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audit_requestDetails</span>
+</span><span id="__span-1-122"><a id="__codelineno-1-122" name="__codelineno-1-122" href="#__codelineno-1-122"></a><span class="w">      </span><span class="nt">eventName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegulatedFlowAudit</span>
+</span><span id="__span-1-123"><a id="__codelineno-1-123" name="__codelineno-1-123" href="#__codelineno-1-123"></a><span class="w">      </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;={FlowName:</span><span class="nv"> </span><span class="s">\&quot;GDPRDataRequest\&quot;,</span><span class="nv"> </span><span class="s">Step:</span><span class="nv"> </span><span class="s">\&quot;4_RequestDetailsCollected\&quot;,</span><span class="nv"> </span><span class="s">RequestType:</span><span class="nv"> </span><span class="s">Topic.RequestType,</span><span class="nv"> </span><span class="s">UserId:</span><span class="nv"> </span><span class="s">System.User.Id,</span><span class="nv"> </span><span class="s">ConversationId:</span><span class="nv"> </span><span class="s">System.Conversation.Id,</span><span class="nv"> </span><span class="s">Timestamp:</span><span class="nv"> </span><span class="s">Text(Now(),</span><span class="nv"> </span><span class="s">DateTimeFormat.UTC)}&quot;</span>
+</span><span id="__span-1-124"><a id="__codelineno-1-124" name="__codelineno-1-124" href="#__codelineno-1-124"></a>
+</span><span id="__span-1-125"><a id="__codelineno-1-125" name="__codelineno-1-125" href="#__codelineno-1-125"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-126"><a id="__codelineno-1-126" name="__codelineno-1-126" href="#__codelineno-1-126"></a><span class="w">    </span><span class="c1"># STEP 5: Confirmation Summary (all fields displayed)</span>
+</span><span id="__span-1-127"><a id="__codelineno-1-127" name="__codelineno-1-127" href="#__codelineno-1-127"></a><span class="w">    </span><span class="c1"># =============================================</span>
+</span><span id="__span-1-128"><a id="__codelineno-1-128" name="__codelineno-1-128" href="#__codelineno-1-128"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-1-129"><a id="__codelineno-1-129" name="__codelineno-1-129" href="#__codelineno-1-129"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step5_summary</span>
+</span><span id="__span-1-130"><a id="__codelineno-1-130" name="__codelineno-1-130" href="#__codelineno-1-130"></a><span class="w">      </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-1-131"><a id="__codelineno-1-131" name="__codelineno-1-131" href="#__codelineno-1-131"></a><span class="w">        </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-1-132"><a id="__codelineno-1-132" name="__codelineno-1-132" href="#__codelineno-1-132"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;**Step</span><span class="nv"> </span><span class="s">3</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">3:</span><span class="nv"> </span><span class="s">Review</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">Submit**\n\nPlease</span><span class="nv"> </span><span class="s">review</span><span class="nv"> </span><span class="s">your</span><span class="nv"> </span><span class="s">request:\n\n|</span><span class="nv"> </span><span class="s">Field</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">Value</span><span class="nv"> </span><span class="s">|\n|---|---|\n|</span><span class="nv"> </span><span class="s">**Name**</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">{Topic.FullName}</span><span class="nv"> </span><span class="s">|\n|</span><span class="nv"> </span><span class="s">**Email**</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">{Topic.VerifyEmail}</span><span class="nv"> </span><span class="s">|\n|</span><span class="nv"> </span><span class="s">**Employee</span><span class="nv"> </span><span class="s">ID**</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">{Topic.EmployeeId}</span><span class="nv"> </span><span class="s">|\n|</span><span class="nv"> </span><span class="s">**Request</span><span class="nv"> </span><span class="s">Type**</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">{Topic.RequestType}</span><span class="nv"> </span><span class="s">|\n|</span><span class="nv"> </span><span class="s">**Details**</span><span class="nv"> </span><span class="s">|</span><span class="nv"> </span><span class="s">{Topic.RequestDetails}</span><span class="nv"> </span><span class="s">|\n\n⚠️</span><span class="nv"> </span><span class="s">**Once</span><span class="nv"> </span><span class="s">submitted,</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">cannot</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">modified.**&quot;</span>
+</span><span id="__span-1-133"><a id="__codelineno-1-133" name="__codelineno-1-133" href="#__codelineno-1-133"></a>
+</span><span id="__span-1-134"><a id="__codelineno-1-134" name="__codelineno-1-134" href="#__codelineno-1-134"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-1-135"><a id="__codelineno-1-135" name="__codelineno-1-135" href="#__codelineno-1-135"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step5_confirm</span>
+</span><span id="__span-1-136"><a id="__codelineno-1-136" name="__codelineno-1-136" href="#__codelineno-1-136"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.FinalConfirm</span>
+</span><span id="__span-1-137"><a id="__codelineno-1-137" name="__codelineno-1-137" href="#__codelineno-1-137"></a><span class="w">      </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Submit</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">request?&quot;</span>
+</span><span id="__span-1-138"><a id="__codelineno-1-138" name="__codelineno-1-138" href="#__codelineno-1-138"></a><span class="w">      </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BooleanPrebuiltEntity</span>
+</span><span id="__span-1-139"><a id="__codelineno-1-139" name="__codelineno-1-139" href="#__codelineno-1-139"></a><span class="w">      </span><span class="nt">alwaysPrompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-1-140"><a id="__codelineno-1-140" name="__codelineno-1-140" href="#__codelineno-1-140"></a>
+</span><span id="__span-1-141"><a id="__codelineno-1-141" name="__codelineno-1-141" href="#__codelineno-1-141"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConditionGroup</span>
+</span><span id="__span-1-142"><a id="__codelineno-1-142" name="__codelineno-1-142" href="#__codelineno-1-142"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkFinalConfirm</span>
+</span><span id="__span-1-143"><a id="__codelineno-1-143" name="__codelineno-1-143" href="#__codelineno-1-143"></a><span class="w">      </span><span class="nt">conditions</span><span class="p">:</span>
+</span><span id="__span-1-144"><a id="__codelineno-1-144" name="__codelineno-1-144" href="#__codelineno-1-144"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">confirmed</span>
+</span><span id="__span-1-145"><a id="__codelineno-1-145" name="__codelineno-1-145" href="#__codelineno-1-145"></a><span class="w">          </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.FinalConfirm = true</span>
+</span><span id="__span-1-146"><a id="__codelineno-1-146" name="__codelineno-1-146" href="#__codelineno-1-146"></a><span class="w">          </span><span class="nt">actions</span><span class="p">:</span>
+</span><span id="__span-1-147"><a id="__codelineno-1-147" name="__codelineno-1-147" href="#__codelineno-1-147"></a><span class="w">            </span><span class="c1"># Submit via Power Automate</span>
+</span><span id="__span-1-148"><a id="__codelineno-1-148" name="__codelineno-1-148" href="#__codelineno-1-148"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InvokeFlow</span>
+</span><span id="__span-1-149"><a id="__codelineno-1-149" name="__codelineno-1-149" href="#__codelineno-1-149"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">submitRequest</span>
+</span><span id="__span-1-150"><a id="__codelineno-1-150" name="__codelineno-1-150" href="#__codelineno-1-150"></a><span class="w">              </span><span class="nt">flowId</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;@environmentVariables(&#39;SubmitGDPRRequestFlowId&#39;)&quot;</span>
+</span><span id="__span-1-151"><a id="__codelineno-1-151" name="__codelineno-1-151" href="#__codelineno-1-151"></a><span class="w">              </span><span class="nt">inputs</span><span class="p">:</span>
+</span><span id="__span-1-152"><a id="__codelineno-1-152" name="__codelineno-1-152" href="#__codelineno-1-152"></a><span class="w">                </span><span class="nt">fullName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.FullName</span>
+</span><span id="__span-1-153"><a id="__codelineno-1-153" name="__codelineno-1-153" href="#__codelineno-1-153"></a><span class="w">                </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.VerifyEmail</span>
+</span><span id="__span-1-154"><a id="__codelineno-1-154" name="__codelineno-1-154" href="#__codelineno-1-154"></a><span class="w">                </span><span class="nt">employeeId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.EmployeeId</span>
+</span><span id="__span-1-155"><a id="__codelineno-1-155" name="__codelineno-1-155" href="#__codelineno-1-155"></a><span class="w">                </span><span class="nt">requestType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.RequestType</span>
+</span><span id="__span-1-156"><a id="__codelineno-1-156" name="__codelineno-1-156" href="#__codelineno-1-156"></a><span class="w">                </span><span class="nt">details</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.RequestDetails</span>
+</span><span id="__span-1-157"><a id="__codelineno-1-157" name="__codelineno-1-157" href="#__codelineno-1-157"></a><span class="w">                </span><span class="nt">consentTimestamp</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Text(Now(), DateTimeFormat.UTC)</span>
+</span><span id="__span-1-158"><a id="__codelineno-1-158" name="__codelineno-1-158" href="#__codelineno-1-158"></a><span class="w">              </span><span class="nt">outputVariable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.SubmitResult</span>
+</span><span id="__span-1-159"><a id="__codelineno-1-159" name="__codelineno-1-159" href="#__codelineno-1-159"></a>
+</span><span id="__span-1-160"><a id="__codelineno-1-160" name="__codelineno-1-160" href="#__codelineno-1-160"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-1-161"><a id="__codelineno-1-161" name="__codelineno-1-161" href="#__codelineno-1-161"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">submitConfirmation</span>
+</span><span id="__span-1-162"><a id="__codelineno-1-162" name="__codelineno-1-162" href="#__codelineno-1-162"></a><span class="w">              </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-1-163"><a id="__codelineno-1-163" name="__codelineno-1-163" href="#__codelineno-1-163"></a><span class="w">                </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-1-164"><a id="__codelineno-1-164" name="__codelineno-1-164" href="#__codelineno-1-164"></a><span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;✅</span><span class="nv"> </span><span class="s">**Request</span><span class="nv"> </span><span class="s">Submitted**\n\n**Reference</span><span class="nv"> </span><span class="s">Number**:</span><span class="nv"> </span><span class="s">{Topic.SubmitResult.referenceNumber}\n**Expected</span><span class="nv"> </span><span class="s">Completion**:</span><span class="nv"> </span><span class="s">Within</span><span class="nv"> </span><span class="s">30</span><span class="nv"> </span><span class="s">calendar</span><span class="nv"> </span><span class="s">days\n**Status</span><span class="nv"> </span><span class="s">Updates**:</span><span class="nv"> </span><span class="s">You</span><span class="nv"> </span><span class="s">will</span><span class="nv"> </span><span class="s">receive</span><span class="nv"> </span><span class="s">email</span><span class="nv"> </span><span class="s">updates</span><span class="nv"> </span><span class="s">at</span><span class="nv"> </span><span class="s">{Topic.VerifyEmail}\n\nFor</span><span class="nv"> </span><span class="s">questions,</span><span class="nv"> </span><span class="s">contact</span><span class="nv"> </span><span class="s">privacy@contoso.com</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">reference</span><span class="nv"> </span><span class="s">**{Topic.SubmitResult.referenceNumber}**.&quot;</span>
+</span><span id="__span-1-165"><a id="__codelineno-1-165" name="__codelineno-1-165" href="#__codelineno-1-165"></a>
+</span><span id="__span-1-166"><a id="__codelineno-1-166" name="__codelineno-1-166" href="#__codelineno-1-166"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LogCustomTelemetryEvent</span>
+</span><span id="__span-1-167"><a id="__codelineno-1-167" name="__codelineno-1-167" href="#__codelineno-1-167"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audit_submitted</span>
+</span><span id="__span-1-168"><a id="__codelineno-1-168" name="__codelineno-1-168" href="#__codelineno-1-168"></a><span class="w">              </span><span class="nt">eventName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegulatedFlowAudit</span>
+</span><span id="__span-1-169"><a id="__codelineno-1-169" name="__codelineno-1-169" href="#__codelineno-1-169"></a><span class="w">              </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;={FlowName:</span><span class="nv"> </span><span class="s">\&quot;GDPRDataRequest\&quot;,</span><span class="nv"> </span><span class="s">Step:</span><span class="nv"> </span><span class="s">\&quot;5_Submitted\&quot;,</span><span class="nv"> </span><span class="s">ReferenceNumber:</span><span class="nv"> </span><span class="s">Topic.SubmitResult.referenceNumber,</span><span class="nv"> </span><span class="s">RequestType:</span><span class="nv"> </span><span class="s">Topic.RequestType,</span><span class="nv"> </span><span class="s">UserId:</span><span class="nv"> </span><span class="s">System.User.Id,</span><span class="nv"> </span><span class="s">ConversationId:</span><span class="nv"> </span><span class="s">System.Conversation.Id,</span><span class="nv"> </span><span class="s">Timestamp:</span><span class="nv"> </span><span class="s">Text(Now(),</span><span class="nv"> </span><span class="s">DateTimeFormat.UTC)}&quot;</span>
+</span><span id="__span-1-170"><a id="__codelineno-1-170" name="__codelineno-1-170" href="#__codelineno-1-170"></a><span class="w">      </span><span class="nt">elseActions</span><span class="p">:</span>
+</span><span id="__span-1-171"><a id="__codelineno-1-171" name="__codelineno-1-171" href="#__codelineno-1-171"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-1-172"><a id="__codelineno-1-172" name="__codelineno-1-172" href="#__codelineno-1-172"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cancelSubmit</span>
+</span><span id="__span-1-173"><a id="__codelineno-1-173" name="__codelineno-1-173" href="#__codelineno-1-173"></a><span class="w">          </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-1-174"><a id="__codelineno-1-174" name="__codelineno-1-174" href="#__codelineno-1-174"></a><span class="w">            </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-1-175"><a id="__codelineno-1-175" name="__codelineno-1-175" href="#__codelineno-1-175"></a><span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Your</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">cancelled.</span><span class="nv"> </span><span class="s">No</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">submitted.\n\nYou</span><span class="nv"> </span><span class="s">can</span><span class="nv"> </span><span class="s">start</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">new</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">anytime.&quot;</span>
+</span><span id="__span-1-176"><a id="__codelineno-1-176" name="__codelineno-1-176" href="#__codelineno-1-176"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LogCustomTelemetryEvent</span>
+</span><span id="__span-1-177"><a id="__codelineno-1-177" name="__codelineno-1-177" href="#__codelineno-1-177"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">audit_cancelled</span>
+</span><span id="__span-1-178"><a id="__codelineno-1-178" name="__codelineno-1-178" href="#__codelineno-1-178"></a><span class="w">          </span><span class="nt">eventName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RegulatedFlowAudit</span>
+</span><span id="__span-1-179"><a id="__codelineno-1-179" name="__codelineno-1-179" href="#__codelineno-1-179"></a><span class="w">          </span><span class="nt">properties</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;={FlowName:</span><span class="nv"> </span><span class="s">\&quot;GDPRDataRequest\&quot;,</span><span class="nv"> </span><span class="s">Step:</span><span class="nv"> </span><span class="s">\&quot;5_Cancelled\&quot;,</span><span class="nv"> </span><span class="s">UserId:</span><span class="nv"> </span><span class="s">System.User.Id,</span><span class="nv"> </span><span class="s">ConversationId:</span><span class="nv"> </span><span class="s">System.Conversation.Id,</span><span class="nv"> </span><span class="s">Timestamp:</span><span class="nv"> </span><span class="s">Text(Now(),</span><span class="nv"> </span><span class="s">DateTimeFormat.UTC)}&quot;</span>
+</span><span id="__span-1-180"><a id="__codelineno-1-180" name="__codelineno-1-180" href="#__codelineno-1-180"></a>
+</span><span id="__span-1-181"><a id="__codelineno-1-181" name="__codelineno-1-181" href="#__codelineno-1-181"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EndDialog</span>
+</span><span id="__span-1-182"><a id="__codelineno-1-182" name="__codelineno-1-182" href="#__codelineno-1-182"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">endFlow</span>
+</span><span id="__span-1-183"><a id="__codelineno-1-183" name="__codelineno-1-183" href="#__codelineno-1-183"></a><span class="w">      </span><span class="nt">clearTopicQueue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span></code></pre></div>
+<p><strong>Step 2: Prevent generative AI override</strong></p>
+<p>Use <code>startBehavior: CancelOtherTopics</code> (shown above) to ensure the regulated topic takes full control once triggered. The orchestrator cannot interrupt or reroute.</p>
+<p>Also add to agent instructions:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">instructions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|+</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="no">## Regulated Workflows</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">  </span><span class="no">When the user triggers a &quot;Data Processing Request&quot; or any GDPR-related topic:</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">  </span><span class="no">- DO NOT attempt to answer their data request yourself</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="no">- DO NOT skip, summarize, or paraphrase any step in the regulated flow</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="no">- Let the dedicated topic handle EVERY step exactly as authored</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">  </span><span class="no">- NEVER intervene or &quot;helpfully&quot; complete steps for the user</span>
+</span></code></pre></div>
+<h4 id="evaluation">Evaluation<a class="headerlink" href="#evaluation" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ease of Implementation</td>
+<td>🟢</td>
+<td>Standard topic authoring. No advanced components.</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>🟡</td>
+<td>Verbose YAML. Every message is hardcoded. Changes require editing and redeploying.</td>
+</tr>
+<tr>
+<td>Channel Compatibility</td>
+<td>🟢</td>
+<td>Works in all channels (plain text + choice questions).</td>
+</tr>
+<tr>
+<td>Determinism</td>
+<td>🟢</td>
+<td>100% deterministic. No LLM involvement. Every step executes exactly as authored.</td>
+</tr>
+<tr>
+<td>Audit Trail</td>
+<td>🟢</td>
+<td>LogCustomTelemetryEvent at every step. Complete, timestamped trail.</td>
+</tr>
+<tr>
+<td>Regulatory Compliance</td>
+<td>🟢</td>
+<td>Verbatim text, mandatory steps, explicit consent logging.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Rigid UX</strong>: The conversation feels robotic. No natural language understanding within the regulated flow — the user can't say "skip to the consent part."</li>
+<li><strong>Verbose implementation</strong>: A 7-step flow with audit logging at every step creates very long YAML files.</li>
+<li><strong>No clarification</strong>: If the user's input to a Question doesn't match the expected entity, the re-prompt is generic. No LLM-powered "Did you mean...?" assistance.</li>
+<li><strong>All or nothing</strong>: The entire flow is deterministic. You can't mix in generative elements for non-regulated parts of the same flow.</li>
+</ul>
+<hr />
+<h3 id="approach-b-hybrid-deterministic-steps-generative-clarification">Approach B: Hybrid — Deterministic Steps + Generative Clarification<a class="headerlink" href="#approach-b-hybrid-deterministic-steps-generative-clarification" title="Permanent link">&para;</a></h3>
+<p><strong>Summary</strong>: The regulated steps (consent, data collection, audit) are fully manual and deterministic. But within those steps, the LLM can provide clarification and explanation on request.<br />
+<strong>Technique</strong>: Manual topic for the regulated flow structure, <code>SearchAndSummarizeContent</code> or Prompt Tool available for "explain this" side queries, clear boundary between regulated steps and optional explanations.</p>
+<h4 id="how-it-works_1">How It Works<a class="headerlink" href="#how-it-works_1" title="Permanent link">&para;</a></h4>
+<div class="language-Text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>STEP 1: Display disclaimer (static, verbatim)
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  User: &quot;What does Article 15 mean?&quot;        ← Optional clarification
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  Agent: [Generative answer about GDPR Art 15] ← LLM-powered explanation
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  Agent: &quot;Now, back to the process...&quot;       ← Returns to deterministic flow
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>STEP 2: Collect consent (static question, mandatory)
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>  User: &quot;Yes&quot;
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>  → Logged, proceed to Step 3
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>STEP 3: Identity verification (static questions)
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a>  User: &quot;What format should my Employee ID be in?&quot;  ← Clarification
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>  Agent: &quot;Your Employee ID is in the format E-XXXXX, found on your payslip.&quot;
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a>  Agent: &quot;Please provide your Employee ID:&quot;  ← Back to the step
+</span></code></pre></div>
+<p>The regulated flow is a deterministic backbone. Generative AI is available as a <strong>side channel</strong> for explanations, but never controls the flow progression.</p>
+<h4 id="implementation_1">Implementation<a class="headerlink" href="#implementation_1" title="Permanent link">&para;</a></h4>
+<p><strong>Step 1: Build the deterministic backbone (same as Approach A)</strong></p>
+<p>Use the same <code>AdaptiveDialog</code> structure from Approach A for all mandatory steps.</p>
+<p><strong>Step 2: Add optional clarification at each step</strong></p>
+<p>After each mandatory message, offer a clarification option:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="w">    </span><span class="c1"># STEP 1: Disclaimer</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step1_disclaimer</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">      </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">        </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;**Important</span><span class="nv"> </span><span class="s">Legal</span><span class="nv"> </span><span class="s">Notice**\n\n[...verbatim</span><span class="nv"> </span><span class="s">disclaimer</span><span class="nv"> </span><span class="s">text...]\n\n💡</span><span class="nv"> </span><span class="s">_If</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">have</span><span class="nv"> </span><span class="s">questions</span><span class="nv"> </span><span class="s">about</span><span class="nv"> </span><span class="s">any</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">these</span><span class="nv"> </span><span class="s">terms,</span><span class="nv"> </span><span class="s">just</span><span class="nv"> </span><span class="s">ask</span><span class="nv"> </span><span class="s">before</span><span class="nv"> </span><span class="s">proceeding._&quot;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="c1"># Wait for user: either consent answer OR clarification question</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">step1_response</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.Step1Response</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">      </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Do</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">acknowledge</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">terms?</span><span class="nv"> </span><span class="s">(Yes</span><span class="nv"> </span><span class="s">/</span><span class="nv"> </span><span class="s">No)\n\nOr</span><span class="nv"> </span><span class="s">ask</span><span class="nv"> </span><span class="s">any</span><span class="nv"> </span><span class="s">question</span><span class="nv"> </span><span class="s">about</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">terms:&quot;</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">      </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StringPrebuiltEntity</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">    </span><span class="c1"># Check: is it a consent answer or a clarification?</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConditionGroup</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">routeStep1</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">      </span><span class="nt">conditions</span><span class="p">:</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isYes</span>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">          </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Lower(Topic.Step1Response) = &quot;yes&quot;</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">          </span><span class="nt">actions</span><span class="p">:</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">            </span><span class="c1"># Proceed to Step 2 (consent logged)</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SetVariable</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">setConsent</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">              </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.UserConsent</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=true</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isNo</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">          </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Lower(Topic.Step1Response) = &quot;no&quot;</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">          </span><span class="nt">actions</span><span class="p">:</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">            </span><span class="c1"># Cancel flow</span>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cancelFlow</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">              </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">                </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;Understood.</span><span class="nv"> </span><span class="s">Your</span><span class="nv"> </span><span class="s">request</span><span class="nv"> </span><span class="s">has</span><span class="nv"> </span><span class="s">been</span><span class="nv"> </span><span class="s">cancelled.&quot;</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EndDialog</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">endOnNo</span>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">              </span><span class="nt">clearTopicQueue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="w">      </span><span class="nt">elseActions</span><span class="p">:</span>
+</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">        </span><span class="c1"># Clarification requested — use generative AI</span>
+</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SearchAndSummarizeContent</span>
+</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clarifyTerms</span>
+</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="w">          </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.Clarification</span>
+</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="w">          </span><span class="nt">userInput</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.Step1Response</span>
+</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a><span class="w">          </span><span class="nt">customInstructions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="w">            </span><span class="no">The user is asking about terms in our GDPR data processing request form.</span>
+</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="w">            </span><span class="no">Answer their question about the legal terms, GDPR articles, or process.</span>
+</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="w">            </span><span class="no">Keep the explanation simple and under 100 words.</span>
+</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="w">            </span><span class="no">After explaining, remind them to respond Yes or No to the consent question.</span>
+</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a>
+</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-4-52"><a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sendClarification</span>
+</span><span id="__span-4-53"><a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a><span class="w">          </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-4-54"><a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a><span class="w">            </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-4-55"><a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;{Topic.Clarification}\n\n---\n\n↩️</span><span class="nv"> </span><span class="s">**Back</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">form**:</span><span class="nv"> </span><span class="s">Do</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">acknowledge</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">terms?</span><span class="nv"> </span><span class="s">(Yes</span><span class="nv"> </span><span class="s">/</span><span class="nv"> </span><span class="s">No)&quot;</span>
+</span><span id="__span-4-56"><a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a>
+</span><span id="__span-4-57"><a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a><span class="w">        </span><span class="c1"># Re-ask the consent question</span>
+</span><span id="__span-4-58"><a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-4-59"><a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reaskConsent</span>
+</span><span id="__span-4-60"><a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="w">          </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.UserConsent</span>
+</span><span id="__span-4-61"><a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a><span class="w">          </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Do</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">acknowledge</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">above</span><span class="nv"> </span><span class="s">terms?&quot;</span>
+</span><span id="__span-4-62"><a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a><span class="w">          </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BooleanPrebuiltEntity</span>
+</span><span id="__span-4-63"><a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a><span class="w">          </span><span class="nt">alwaysPrompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span></code></pre></div>
+<p><strong>Step 3: Ensure generative AI never modifies the flow</strong></p>
+<p>Key rules for the hybrid pattern:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">instructions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|+</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="no">## Hybrid Regulated Flow Rules</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">  </span><span class="no">When a regulated workflow (GDPR, KYC, medical intake) is active:</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">  </span><span class="no">1. NEVER skip, reorder, or summarize mandatory steps</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">  </span><span class="no">2. You MAY answer clarification questions about terms, process, or requirements</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">  </span><span class="no">3. After answering a clarification, ALWAYS return to the current step</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">  </span><span class="no">4. NEVER use the user&#39;s clarification question as a substitute for their actual answer</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">  </span><span class="no">5. Clarification answers are NOT logged as official responses</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">  </span><span class="no">6. Only explicit Yes/No or data field answers are logged to the audit trail</span>
+</span></code></pre></div>
+<h4 id="evaluation_1">Evaluation<a class="headerlink" href="#evaluation_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ease of Implementation</td>
+<td>🟡</td>
+<td>Approach A complexity + clarification routing logic.</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>🟡</td>
+<td>More complex branching per step (consent vs clarification).</td>
+</tr>
+<tr>
+<td>Channel Compatibility</td>
+<td>🟢</td>
+<td>Works in all channels.</td>
+</tr>
+<tr>
+<td>Determinism</td>
+<td>🟢</td>
+<td>Flow backbone is 100% deterministic. Clarification is a non-destructive side channel.</td>
+</tr>
+<tr>
+<td>Audit Trail</td>
+<td>🟢</td>
+<td>Only mandatory step responses are logged. Clarifications are labeled separately.</td>
+</tr>
+<tr>
+<td>User Experience</td>
+<td>🟢</td>
+<td>Users can ask questions without leaving the flow. Much less robotic than Approach A.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="limitations_1">Limitations<a class="headerlink" href="#limitations_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Complex per-step routing</strong>: Each step needs: mandatory answer detection, clarification detection, generative answer, return-to-step logic. This multiplies the YAML per step.</li>
+<li><strong>Clarification scope risk</strong>: The generative AI answering a clarification question may inadvertently provide information that contradicts or modifies the mandatory text. Strict <code>customInstructions</code> mitigate this but don't eliminate it.</li>
+<li><strong>User confusion</strong>: "I asked a question and the bot answered, but now it's asking me the same consent question again" — the UX of returning to the step after clarification can feel repetitive.</li>
+</ul>
+<hr />
+<h3 id="approach-c-state-machine-with-power-automate">Approach C: State Machine with Power Automate<a class="headerlink" href="#approach-c-state-machine-with-power-automate" title="Permanent link">&para;</a></h3>
+<p><strong>Summary</strong>: Externalize the flow logic to a Power Automate flow that manages state (current step, completed steps, audit log). The agent topic is thin — it calls the flow at each turn, and the flow tells it what to display and ask next.<br />
+<strong>Technique</strong>: Power Automate flow as state machine, Dataverse records for ongoing request state, agent topic as I/O interface.</p>
+<h4 id="how-it-works_2">How It Works<a class="headerlink" href="#how-it-works_2" title="Permanent link">&para;</a></h4>
+<pre class="mermaid"><code>flowchart LR
+    A["&lt;b&gt;Agent Topic&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;User triggers flow&lt;br/&gt;User provides answers&lt;br/&gt;All steps complete"] -- "User input" --&gt; B["&lt;b&gt;Power Automate&lt;br/&gt;State Machine&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Create request record&lt;br/&gt;Validate answer&lt;br/&gt;Update record (Step N ✓)&lt;br/&gt;Determine next step&lt;br/&gt;Finalize request&lt;br/&gt;Generate reference number"]
+    B -- "Step instructions /&lt;br/&gt;Confirmation + ref#" --&gt; A
+    B -- "Create / Update" --&gt; C["&lt;b&gt;Dataverse&lt;/b&gt;&lt;br/&gt;&lt;br/&gt;Request record&lt;br/&gt;with state tracking"]
+    C -- "Current state" --&gt; B</code></pre>
+<p>The flow is the brain. The topic is just the mouth and ears. All state, validation, sequencing, and audit logic lives in the flow.</p>
+<h4 id="implementation_2">Implementation<a class="headerlink" href="#implementation_2" title="Permanent link">&para;</a></h4>
+<p><strong>Step 1: Design the Dataverse state table</strong></p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RequestId</code></td>
+<td>Auto-number</td>
+<td>Unique request reference</td>
+</tr>
+<tr>
+<td><code>UserId</code></td>
+<td>Single line text</td>
+<td>Requesting user</td>
+</tr>
+<tr>
+<td><code>CurrentStep</code></td>
+<td>Integer</td>
+<td>Current step number (1-7)</td>
+</tr>
+<tr>
+<td><code>Status</code></td>
+<td>Choice (InProgress/Completed/Cancelled)</td>
+<td>Overall status</td>
+</tr>
+<tr>
+<td><code>ConsentGiven</code></td>
+<td>Boolean</td>
+<td>Step 2 result</td>
+</tr>
+<tr>
+<td><code>ConsentTimestamp</code></td>
+<td>DateTime</td>
+<td>When consent was given</td>
+</tr>
+<tr>
+<td><code>FullName</code></td>
+<td>Single line text</td>
+<td>Step 3 result</td>
+</tr>
+<tr>
+<td><code>Email</code></td>
+<td>Single line text</td>
+<td>Step 3 result</td>
+</tr>
+<tr>
+<td><code>EmployeeId</code></td>
+<td>Single line text</td>
+<td>Step 3 result</td>
+</tr>
+<tr>
+<td><code>RequestType</code></td>
+<td>Choice</td>
+<td>Step 4 result</td>
+</tr>
+<tr>
+<td><code>RequestDetails</code></td>
+<td>Multi-line text</td>
+<td>Step 4 result</td>
+</tr>
+<tr>
+<td><code>AuditLog</code></td>
+<td>Multi-line text</td>
+<td>JSON array of all step events</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Step 2: Create the state machine flow</strong></p>
+<div class="language-Text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>Trigger: Run a flow from Copilot
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>  Inputs: requestId (Text, optional), userInput (Text), userId (Text)
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a># If no requestId — create new request
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>Condition: IsBlank(requestId)
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>  Yes → Create Row (Dataverse): new request, CurrentStep = 1
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>        Set requestId = new row ID
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>  No  → Get Row (Dataverse): load existing request
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a># State machine switch on CurrentStep
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>Switch: CurrentStep
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>  Case 1 (Disclaimer):
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>    Output:
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>      message: &quot;[verbatim disclaimer text]&quot;
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>      question: &quot;Do you acknowledge? (Yes/No)&quot;
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>      type: &quot;boolean&quot;
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>      nextStep: 2
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>  Case 2 (Consent):
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>    Validate: userInput is &quot;yes&quot; or &quot;no&quot;
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>    If &quot;yes&quot;:
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>      Update row: ConsentGiven=true, ConsentTimestamp=utcNow(), CurrentStep=3
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>      Append to AuditLog: {step: 2, action: &quot;consent&quot;, value: true, timestamp: utcNow()}
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>      Output: next step instructions
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>    If &quot;no&quot;:
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>      Update row: Status=Cancelled
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>      Output: cancellation message
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>  Case 3 (Identity - Name):
+</span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>    Update row: FullName=userInput, CurrentStep=4
+</span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a>    Append to AuditLog: {step: 3, action: &quot;name_collected&quot;, timestamp: utcNow()}
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a>    Output: email question
+</span><span id="__span-6-33"><a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a>
+</span><span id="__span-6-34"><a id="__codelineno-6-34" name="__codelineno-6-34" href="#__codelineno-6-34"></a>  Case 4 (Identity - Email):
+</span><span id="__span-6-35"><a id="__codelineno-6-35" name="__codelineno-6-35" href="#__codelineno-6-35"></a>    Validate: email format
+</span><span id="__span-6-36"><a id="__codelineno-6-36" name="__codelineno-6-36" href="#__codelineno-6-36"></a>    Update row: Email=userInput, CurrentStep=5
+</span><span id="__span-6-37"><a id="__codelineno-6-37" name="__codelineno-6-37" href="#__codelineno-6-37"></a>    Output: employee ID question
+</span><span id="__span-6-38"><a id="__codelineno-6-38" name="__codelineno-6-38" href="#__codelineno-6-38"></a>
+</span><span id="__span-6-39"><a id="__codelineno-6-39" name="__codelineno-6-39" href="#__codelineno-6-39"></a>  # ... cases 5-7 ...
+</span><span id="__span-6-40"><a id="__codelineno-6-40" name="__codelineno-6-40" href="#__codelineno-6-40"></a>
+</span><span id="__span-6-41"><a id="__codelineno-6-41" name="__codelineno-6-41" href="#__codelineno-6-41"></a>  Case 7 (Submit):
+</span><span id="__span-6-42"><a id="__codelineno-6-42" name="__codelineno-6-42" href="#__codelineno-6-42"></a>    Update row: Status=Completed
+</span><span id="__span-6-43"><a id="__codelineno-6-43" name="__codelineno-6-43" href="#__codelineno-6-43"></a>    Generate reference number
+</span><span id="__span-6-44"><a id="__codelineno-6-44" name="__codelineno-6-44" href="#__codelineno-6-44"></a>    Output: confirmation with reference
+</span></code></pre></div>
+<p><strong>Step 3: Thin agent topic</strong></p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AdaptiveDialog</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="nt">beginDialog</span><span class="p">:</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnRecognizedIntent</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="w">  </span><span class="nt">intent</span><span class="p">:</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Regulated Request</span>
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">    </span><span class="nt">triggerQueries</span><span class="p">:</span>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;data</span><span class="nv"> </span><span class="s">request&quot;</span>
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;GDPR</span><span class="nv"> </span><span class="s">request&quot;</span>
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="w">  </span><span class="nt">actions</span><span class="p">:</span>
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="c1"># Start or resume the flow</span>
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InvokeFlow</span>
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">processStep</span>
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="w">      </span><span class="nt">flowId</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;@environmentVariables(&#39;RegulatedFlowId&#39;)&quot;</span>
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">      </span><span class="nt">inputs</span><span class="p">:</span>
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">        </span><span class="nt">requestId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Global.CurrentRequestId</span>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">        </span><span class="nt">userInput</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=System.Activity.Text</span>
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="w">        </span><span class="nt">userId</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=System.User.Id</span>
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="w">      </span><span class="nt">outputVariable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.FlowResponse</span>
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a><span class="w">    </span><span class="c1"># Display what the flow tells us</span>
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">showStep</span>
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="w">      </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="w">        </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a><span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;{Topic.FlowResponse.message}&quot;</span>
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a><span class="w">    </span><span class="c1"># Save the request ID for next turn</span>
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SetVariable</span>
+</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">saveRequestId</span>
+</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Global.CurrentRequestId</span>
+</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a><span class="w">      </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.FlowResponse.requestId</span>
+</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>
+</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a><span class="w">    </span><span class="c1"># Ask the question the flow specified</span>
+</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConditionGroup</span>
+</span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkFlowStatus</span>
+</span><span id="__span-7-37"><a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a><span class="w">      </span><span class="nt">conditions</span><span class="p">:</span>
+</span><span id="__span-7-38"><a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">isComplete</span>
+</span><span id="__span-7-39"><a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a><span class="w">          </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.FlowResponse.status = &quot;Completed&quot; || Topic.FlowResponse.status = &quot;Cancelled&quot;</span>
+</span><span id="__span-7-40"><a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a><span class="w">          </span><span class="nt">actions</span><span class="p">:</span>
+</span><span id="__span-7-41"><a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SetVariable</span>
+</span><span id="__span-7-42"><a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">clearRequest</span>
+</span><span id="__span-7-43"><a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a><span class="w">              </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Global.CurrentRequestId</span>
+</span><span id="__span-7-44"><a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a><span class="w">              </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=&quot;&quot;</span>
+</span><span id="__span-7-45"><a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EndDialog</span>
+</span><span id="__span-7-46"><a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">endRegulated</span>
+</span><span id="__span-7-47"><a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a><span class="w">              </span><span class="nt">clearTopicQueue</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-7-48"><a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a><span class="w">      </span><span class="nt">elseActions</span><span class="p">:</span>
+</span><span id="__span-7-49"><a id="__codelineno-7-49" name="__codelineno-7-49" href="#__codelineno-7-49"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-7-50"><a id="__codelineno-7-50" name="__codelineno-7-50" href="#__codelineno-7-50"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">collectInput</span>
+</span><span id="__span-7-51"><a id="__codelineno-7-51" name="__codelineno-7-51" href="#__codelineno-7-51"></a><span class="w">          </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.UserInput</span>
+</span><span id="__span-7-52"><a id="__codelineno-7-52" name="__codelineno-7-52" href="#__codelineno-7-52"></a><span class="w">          </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.FlowResponse.question</span>
+</span><span id="__span-7-53"><a id="__codelineno-7-53" name="__codelineno-7-53" href="#__codelineno-7-53"></a><span class="w">          </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StringPrebuiltEntity</span>
+</span></code></pre></div>
+<h4 id="evaluation_2">Evaluation<a class="headerlink" href="#evaluation_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ease of Implementation</td>
+<td>🔴</td>
+<td>Complex flow logic + Dataverse state table + thin topic. Most architecture of all approaches.</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>🟢</td>
+<td>Flow is visual (Power Automate designer). Business logic separate from presentation.</td>
+</tr>
+<tr>
+<td>Channel Compatibility</td>
+<td>🟢</td>
+<td>Agent topic is minimal — works in all channels.</td>
+</tr>
+<tr>
+<td>Determinism</td>
+<td>🟢</td>
+<td>Flow controls sequencing absolutely. Agent can't skip steps.</td>
+</tr>
+<tr>
+<td>Audit Trail</td>
+<td>🟢</td>
+<td>Dataverse row IS the audit trail. Every step recorded with timestamps. Queryable, exportable.</td>
+</tr>
+<tr>
+<td>Resumability</td>
+<td>🟢</td>
+<td>If conversation drops, user can resume from the last completed step (state persisted in Dataverse).</td>
+</tr>
+</tbody>
+</table>
+<h4 id="limitations_2">Limitations<a class="headerlink" href="#limitations_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Highest implementation complexity</strong>: The state machine flow, Dataverse table, and thin topic pattern require significant design and development.</li>
+<li><strong>Power Automate latency</strong>: Every step round-trips through Power Automate (1-3 seconds). A 7-step flow has 7 round-trips.</li>
+<li><strong>Flow quota impact</strong>: Every step consumes a flow run. A 7-step process = 7 flow runs per request.</li>
+<li><strong>Debugging difficulty</strong>: When something goes wrong, you need to trace through flow run history, Dataverse records, and conversation logs — three different places.</li>
+<li><strong>Overkill for simple flows</strong>: A 3-step consent collection doesn't need a state machine. Approach A suffices.</li>
+</ul>
+<hr />
+<h2 id="comparison-matrix">Comparison Matrix<a class="headerlink" href="#comparison-matrix" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Approach A: Fully Manual</th>
+<th>Approach B: Hybrid</th>
+<th>Approach C: State Machine</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Implementation Effort</strong></td>
+<td>🟢 Low (2-3 hours)</td>
+<td>🟡 Medium (4-6 hours)</td>
+<td>🔴 High (1-2 days)</td>
+</tr>
+<tr>
+<td><strong>Determinism</strong></td>
+<td>🟢 100%</td>
+<td>🟢 100% (backbone)</td>
+<td>🟢 100%</td>
+</tr>
+<tr>
+<td><strong>User Experience</strong></td>
+<td>🔴 Robotic</td>
+<td>🟢 Natural (clarification)</td>
+<td>🟡 Step-by-step (functional)</td>
+</tr>
+<tr>
+<td><strong>Audit Trail</strong></td>
+<td>🟢 Telemetry events</td>
+<td>🟢 Telemetry events</td>
+<td>🟢 Dataverse records</td>
+</tr>
+<tr>
+<td><strong>Resumability</strong></td>
+<td>🔴 Must restart if drops</td>
+<td>🔴 Must restart if drops</td>
+<td>🟢 Resume from last step</td>
+</tr>
+<tr>
+<td><strong>Clarification Support</strong></td>
+<td>🔴 None</td>
+<td>🟢 Generative side channel</td>
+<td>🔴 None (unless added)</td>
+</tr>
+<tr>
+<td><strong>Logic Separation</strong></td>
+<td>🔴 All in topic YAML</td>
+<td>🟡 Mixed</td>
+<td>🟢 Logic in flow, UI in topic</td>
+</tr>
+<tr>
+<td><strong>Best When...</strong></td>
+<td>Simple regulated flows (3-5 steps)</td>
+<td>User needs to understand terms</td>
+<td>Long flows, resumability, audit emphasis</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recommended-approach">Recommended Approach<a class="headerlink" href="#recommended-approach" title="Permanent link">&para;</a></h2>
+<p><strong>For simple regulated flows (3-5 steps)</strong>: <strong>Approach A (Fully Manual)</strong> — the simplest path to compliance. Verbatim text, mandatory questions, audit logging. Quick to implement, easy to audit.</p>
+<p><strong>For user-friendly regulated flows</strong>: <strong>Approach B (Hybrid)</strong> — when users need to understand what they're consenting to, generative clarification within a deterministic backbone is the best UX. It's the "explain this clause to me" pattern that real users need.</p>
+<p><strong>For complex, long, or resumable regulated flows</strong>: <strong>Approach C (State Machine)</strong> — when the flow has 7+ steps, may take multiple sessions to complete, or when the audit trail must be a permanent, queryable Dataverse record. Worth the investment for high-compliance scenarios.</p>
+<p><strong>Decision guide</strong>:</p>
+<div class="language-Text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>3-5 steps, simple consent     →  Approach A (manual, 2 hours)
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>5-7 steps, user needs help    →  Approach B (hybrid, 4-6 hours)
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>7+ steps, multi-session       →  Approach C (state machine, 1-2 days)
+</span></code></pre></div>
+<h2 id="platform-gotchas">Platform Gotchas<a class="headerlink" href="#platform-gotchas" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong><code>startBehavior: CancelOtherTopics</code> is essential for regulated flows.</strong><br />
+Without it, generative orchestration may interrupt your regulated topic with a different topic match mid-flow. Always set this for any regulated topic.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Generative orchestration can "helpfully" answer before the regulated topic fires.</strong><br />
+If a user says "I want to submit a GDPR request," the orchestrator may try to answer with generative content about GDPR rather than triggering your deterministic topic. Add agent instructions: "NEVER answer GDPR-related questions directly. ALWAYS route to the 'Data Processing Request' topic."</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong><code>alwaysPrompt: true</code> is required for mandatory questions.</strong><br />
+Without <code>alwaysPrompt</code>, Copilot Studio may skip a question if it thinks the user already answered it (from conversation context). For regulated flows, EVERY question must be explicitly asked and answered in sequence.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>LogCustomTelemetryEvent is your audit trail.</strong><br />
+For Approach A and B, telemetry events with step names, timestamps, and consent values create a queryable audit trail in Application Insights. Use KQL to generate compliance reports.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>These flows coexist with generative features.</strong><br />
+Your agent can be 90% generative (FAQ, knowledge search, natural conversation) and 10% deterministic (regulated flows). The regulated topics only take over when their trigger phrases fire. The rest of the agent behaves normally.</p>
+</div>
+<h2 id="related-gems">Related Gems<a class="headerlink" href="#related-gems" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../GEM-022-secure-data-handling-in-conversations/">Gem 022</a></strong>: Secure Data Handling — Regulated flows often collect sensitive data. Apply <a href="../GEM-022-secure-data-handling-in-conversations/">Gem 022</a>'s redaction patterns to audit logs.</li>
+<li><strong><a href="../GEM-006-adaptive-cards-as-multi-field-forms/">Gem 006</a></strong>: Adaptive Cards as Multi-Field Forms — Use cards within regulated flows for multi-field collection in fewer turns.</li>
+<li><strong><a href="../GEM-004-debug-mode-for-m365-copilot/">Gem 004</a></strong>: Debug Mode — Telemetry pipeline from <a href="../GEM-004-debug-mode-for-m365-copilot/">Gem 004</a> is the same infrastructure used for compliance audit logging.</li>
+<li><strong><a href="../GEM-015-dataverse-crud-operations-patterns/">Gem 015</a></strong>: Dataverse CRUD — State Machine (Approach C) uses Dataverse patterns from <a href="../GEM-015-dataverse-crud-operations-patterns/">Gem 015</a> for request state management.</li>
+<li><strong><a href="../GEM-021-conversation-branching-and-disambiguation/">Gem 021</a></strong>: Disambiguation — Regulated topics need unique trigger phrases that don't overlap with generative topics.</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://gdpr-info.eu/chapter-3/">GDPR Article 15-22: Data Subject Rights</a></li>
+<li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-create-and-edit-topics">Microsoft Learn: Topic authoring in Copilot Studio</a></li>
+<li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-ask-a-question">Microsoft Learn: Question nodes</a></li>
+<li><a href="https://learn.microsoft.com/en-us/microsoft-copilot-studio/advanced-custom-analytics">Microsoft Learn: Application Insights custom events</a></li>
+<li><a href="https://www.pcisecuritystandards.org/">PCI-DSS requirements for conversational AI</a></li>
+</ul>
+<hr />
+<p><em>Gem 027 | Author: Sébastien Brochet | Created: 2026-02-17 | Last Validated: 2026-02-17 | Platform Version: current</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © 2026 Sébastien Brochet. All rights reserved.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://linkedin.com/in/sebastienbrochet" target="_blank" rel="noopener" title="linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/sebbrochet" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

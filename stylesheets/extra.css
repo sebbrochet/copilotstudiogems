@@ -1,0 +1,48 @@
+:root {
+  --md-primary-fg-color: #6A1B9A;
+  --md-accent-fg-color: #FFA000;
+}
+
+/* Gem evaluation ratings - ensure emoji render well */
+.md-typeset table td {
+  vertical-align: middle;
+}
+
+/* Code blocks */
+.md-typeset pre > code {
+  font-size: 0.82rem;
+}
+
+/* Comparison matrix styling */
+.md-typeset table:not([class]) th {
+  background-color: var(--md-primary-fg-color);
+  color: white;
+  font-weight: 600;
+}
+
+/* Admonition callouts for Platform Gotchas */
+.md-typeset .admonition.warning {
+  border-left-color: #FF9800;
+}
+
+.md-typeset .admonition.note {
+  border-left-color: #2196F3;
+}
+
+/* Part opener styling */
+.md-typeset h1 {
+  font-weight: 700;
+}
+
+/* Print-friendly adjustments */
+@media print {
+  .md-sidebar,
+  .md-header,
+  .md-footer {
+    display: none;
+  }
+  
+  .md-content {
+    max-width: 100%;
+  }
+}

@@ -1,0 +1,3662 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Practical, evaluated patterns for building AI agents in Microsoft Copilot Studio">
+      
+      
+        <meta name="author" content="Sébastien Brochet">
+      
+      
+        <link rel="canonical" href="https://copilotstudiogems.sebbrochet.com/gems/GEM-026-azure-ai-search-advanced-integration/">
+      
+      
+        <link rel="prev" href="../GEM-012-cost-estimation-and-token-budget-management/">
+      
+      
+        <link rel="next" href="../../parts/part-7/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.svg">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.3">
+    
+    
+      
+        <title>GEM-026: AI Search - Copilot Studio Gems</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#gem-026-azure-ai-search-advanced-integration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Copilot Studio Gems" class="md-header__button md-logo" aria-label="Copilot Studio Gems" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 9h3l-5 7m-4-7h4l-2 8M5 9h3l2 7m5-12h2l2 3h-3m-5-3h2l1 3h-4M7 4h2L8 7H5m1-5L2 8l10 14L22 8l-4-6z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Copilot Studio Gems
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              GEM-026: AI Search
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/sebbrochet/copilotstudiogems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sebbrochet/copilotstudiogems
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Copilot Studio Gems
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../front-matter/foreword/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Foreword
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../front-matter/how-to-read/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  How to Read
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-1/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  I. State
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-2/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  II. Persona
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-3/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  III. UX
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-4/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  IV. Security
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-5/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  V. Integration
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../parts/part-6/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  VI. Knowledge
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../parts/part-7/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  VII. Ops
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../appendices/gem-template/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Appendices
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Copilot Studio Gems" class="md-nav__button md-logo" aria-label="Copilot Studio Gems" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16 9h3l-5 7m-4-7h4l-2 8M5 9h3l2 7m5-12h2l2 3h-3m-5-3h2l1 3h-4M7 4h2L8 7H5m1-5L2 8l10 14L22 8l-4-6z"/></svg>
+
+    </a>
+    Copilot Studio Gems
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/sebbrochet/copilotstudiogems" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    sebbrochet/copilotstudiogems
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Copilot Studio Gems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../front-matter/foreword/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Foreword
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../front-matter/how-to-read/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Read
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    I. State
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    I. State
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part I — Foundations: State &amp; Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-001-persisting-user-context-across-sessions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-001: User Context
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-011-conversation-memory-within-a-session/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-011: Session Memory
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-017-multi-tenant-agent-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-017: Multi-Tenant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    II. Persona
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    II. Persona
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-2/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part II — Personalization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-002-persona-adaptive-agent-instructions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-002: Persona Adaptation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-005-multi-language-agent-response/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-005: Multi-Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-020-agent-instructions-as-living-documents/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-020: Living Instructions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    III. UX
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    III. UX
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-3/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part III — Conversation UX
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-006-adaptive-cards-as-multi-field-forms/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-006: Card Forms
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-010-agent-to-human-handoff-with-context/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-010: Human Handoff
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-021-conversation-branching-and-disambiguation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-021: Disambiguation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-025-custom-canvas-and-embedded-agent-ux-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-025: Custom Canvas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-027-deterministic-conversation-flows-for-regulated-workflows/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-027: Regulated Flows
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IV. Security
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IV. Security
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-4/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part IV — Security
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-007-role-based-feature-gating/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-007: Role Gating
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-022-secure-data-handling-in-conversations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-022: Secure Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    V. Integration
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    V. Integration
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-5/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part V — Integration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-009-graceful-degradation-and-fallback-chains/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-009: Fallback Chains
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-014-proactive-agent-messages-and-event-driven-conversations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-014: Proactive Msgs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-015-dataverse-crud-operations-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-015: Dataverse CRUD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-018-sharepoint-document-retrieval-and-display/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-018: SharePoint Docs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-023-mcp-connector-integration-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-023: MCP Connectors
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-024-multi-agent-composition-and-connected-agent-patterns/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-024: Multi-Agent
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-028-grounding-agents-in-enterprise-analytics-data/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-028: Fabric Data
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VI. Knowledge
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VI. Knowledge
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-6/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part VI — Knowledge &amp; Performance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-008-knowledge-source-optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-008: Knowledge Optim.
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-012-cost-estimation-and-token-budget-management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-012: Token Budget
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-026: AI Search
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-026: AI Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Problem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-azure-ai-search-vs-sharepoint-native-decision-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Azure AI Search vs SharePoint Native — Decision Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-azure-ai-search-the-enterprise-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Azure AI Search — The Enterprise Scenarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-ideal-outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Ideal Outcome
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approaches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Approaches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#approach-a-native-azure-ai-search-knowledge-source-ga" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach A: Native Azure AI Search Knowledge Source (GA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-b-http-node-to-azure-ai-search-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach B: HTTP Node to Azure AI Search REST API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-c-power-automate-search-flow-as-agent-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach C: Power Automate Search Flow as Agent Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Approach
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-gems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Gems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VII. Ops
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VII. Ops
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../parts/part-7/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Part VII — Observability &amp; Operations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-003-tracing-agent-progress-before-response/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-003: Progress Tracing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-004-debug-mode-for-m365-copilot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-004: Debug Mode
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-013-testing-strategies-for-multi-agent-architectures/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-013: Testing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../GEM-016-conversation-analytics-and-quality-measurement/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GEM-016: Analytics
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" >
+        
+          
+          <label class="md-nav__link" for="__nav_11" id="__nav_11_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Appendices
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Appendices
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/gem-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    A: Gem Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/platform-reference/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    B: Platform Ref
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/gotchas-compendium/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    C: Gotchas
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/decision-frameworks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    D: Decisions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/glossary/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Glossary
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../appendices/about-author/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Classification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Problem">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-azure-ai-search-vs-sharepoint-native-decision-guide" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use Azure AI Search vs SharePoint Native — Decision Guide
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-azure-ai-search-the-enterprise-scenarios" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Azure AI Search — The Enterprise Scenarios
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-ideal-outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Ideal Outcome
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approaches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approaches
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Approaches">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#approach-a-native-azure-ai-search-knowledge-source-ga" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach A: Native Azure AI Search Knowledge Source (GA)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-b-http-node-to-azure-ai-search-rest-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach B: HTTP Node to Azure AI Search REST API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#approach-c-power-automate-search-flow-as-agent-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Approach C: Power Automate Search Flow as Agent Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#comparison-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Comparison Matrix
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-approach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Approach
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-gotchas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform Gotchas
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-gems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Gems
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="gem-026-azure-ai-search-advanced-integration">Gem 026: Azure AI Search Advanced Integration<a class="headerlink" href="#gem-026-azure-ai-search-advanced-integration" title="Permanent link">&para;</a></h1>
+<p><em>When SharePoint knowledge isn't enough — bring enterprise-scale search with vector indexes, semantic ranking, and custom schemas.</em></p>
+<h2 id="classification">Classification<a class="headerlink" href="#classification" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Category</strong></td>
+<td>Performance</td>
+</tr>
+<tr>
+<td><strong>Complexity</strong></td>
+<td>⭐⭐⭐ to ⭐⭐⭐⭐ (depends on index sophistication)</td>
+</tr>
+<tr>
+<td><strong>Channels</strong></td>
+<td>All</td>
+</tr>
+<tr>
+<td><strong>Prerequisite Gems</strong></td>
+<td><a href="../GEM-008-knowledge-source-optimization/">Gem 008</a> (knowledge source optimization — the foundational knowledge Gem)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="the-problem">The Problem<a class="headerlink" href="#the-problem" title="Permanent link">&para;</a></h2>
+<p><a href="../GEM-008-knowledge-source-optimization/">Gem 008</a> covers optimizing <strong>built-in knowledge sources</strong> — SharePoint sites, uploaded files, public websites. These work well for small-to-medium document collections (hundreds of files). But enterprise agents face scenarios where built-in sources hit their limits.</p>
+<h3 id="when-to-use-azure-ai-search-vs-sharepoint-native-decision-guide">When to Use Azure AI Search vs SharePoint Native — Decision Guide<a class="headerlink" href="#when-to-use-azure-ai-search-vs-sharepoint-native-decision-guide" title="Permanent link">&para;</a></h3>
+<p>Before diving into Azure AI Search approaches, understand whether you actually need it. SharePoint native knowledge is simpler and sufficient for many agents.</p>
+<h4 id="how-each-works-internally">How Each Works Internally<a class="headerlink" href="#how-each-works-internally" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>SharePoint Native Knowledge</th>
+<th>Azure AI Search Knowledge</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Indexing</strong></td>
+<td>Platform-managed — Copilot Studio ingests via Dataverse, chunks files, creates vector embeddings automatically</td>
+<td>You build the index externally — choose embedding model, chunking strategy, schema, and ranking profile</td>
+</tr>
+<tr>
+<td><strong>Embedding model</strong></td>
+<td>Platform-managed (you don't choose)</td>
+<td>You choose (text-embedding-ada-002, text-embedding-3-small, etc.)</td>
+</tr>
+<tr>
+<td><strong>Chunking</strong></td>
+<td>Platform-managed (no control over chunk size or overlap)</td>
+<td>You control: chunk size, overlap, boundaries (by paragraph, page, heading)</td>
+</tr>
+<tr>
+<td><strong>Semantic ranking</strong></td>
+<td>Built-in but opaque — no configuration</td>
+<td>Explicit semantic configuration — you choose which fields are title/content/keywords</td>
+</tr>
+<tr>
+<td><strong>Vector search</strong></td>
+<td>Automatic vector embeddings via Dataverse</td>
+<td>Configurable: hybrid (vector + keyword), pure vector, or keyword-only</td>
+</tr>
+<tr>
+<td><strong>Metadata/filtering</strong></td>
+<td>None — no field-level filtering available</td>
+<td>Full OData filters on custom fields (department, date, type, author, etc.)</td>
+</tr>
+<tr>
+<td><strong>Index refresh</strong></td>
+<td>Automatic scheduled sync (not manually triggerable)</td>
+<td>You control: push API, indexers on schedule, blob change detection</td>
+</tr>
+<tr>
+<td><strong>Scale</strong></td>
+<td>Max 500 knowledge objects per agent. Files ≤7 MB without M365 Copilot license. Up to 15 SharePoint lists / 2,048 rows per list</td>
+<td>Millions of documents. No practical file count limit. Full enterprise scale</td>
+</tr>
+<tr>
+<td><strong>Permissions</strong></td>
+<td>Live checks against SharePoint — user sees only what they can access</td>
+<td>Depends on auth type: user-delegated inherits Azure RBAC; API key gives full access</td>
+</tr>
+<tr>
+<td><strong>Citations</strong></td>
+<td>Automatic (links back to SharePoint file)</td>
+<td>Requires URL field in index (<code>metadata_storage_path</code> or equivalent)</td>
+</tr>
+</tbody>
+</table>
+<h4 id="the-decision-flow">The Decision Flow<a class="headerlink" href="#the-decision-flow" title="Permanent link">&para;</a></h4>
+<pre class="mermaid"><code>flowchart TB
+    A{"Is your content already in&lt;br/&gt;SharePoint and &lt; 500 files?"} --&gt;|YES| B{"Are you satisfied with search quality&lt;br/&gt;(after GEM-008 optimization)?"}
+    A --&gt;|NO| F{"Where IS the content?"}
+    B --&gt;|YES| C["Use SharePoint Native ✅&lt;br/&gt;(simplest path, done)"]
+    B --&gt;|NO| D{"Is the problem chunking,&lt;br/&gt;filtering, or scale?"}
+    D --&gt;|"Chunking/quality"| E1["Azure AI Search&lt;br/&gt;(you control embeddings + chunks)"]
+    D --&gt;|"Filtering"| E2["Azure AI Search&lt;br/&gt;(OData filters on custom fields)"]
+    F --&gt;|"Azure Blob / SQL / Cosmos DB"| G1["Azure AI Search&lt;br/&gt;(indexers connect natively)"]
+    F --&gt;|"Multiple sources &gt; 500 files"| G2["Azure AI Search&lt;br/&gt;(scales beyond limits)"]
+    F --&gt;|"Custom data sources / APIs"| G3["Azure AI Search&lt;br/&gt;(custom indexing pipeline)"]</code></pre>
+<h4 id="quick-decision-table">Quick Decision Table<a class="headerlink" href="#quick-decision-table" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>SharePoint Native</th>
+<th>Azure AI Search</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>&lt; 500 documents, all in SharePoint</td>
+<td>✅ Best choice</td>
+<td>Overkill</td>
+</tr>
+<tr>
+<td>Documents in Word/HTML formats</td>
+<td>✅ Works well with <a href="../GEM-008-knowledge-source-optimization/">GEM-008</a></td>
+<td>Not needed</td>
+</tr>
+<tr>
+<td>Need custom chunking (specific section patterns)</td>
+<td>❌ Can't control</td>
+<td>✅ You define boundaries</td>
+</tr>
+<tr>
+<td>Need metadata filtering ("Engineering docs from Q4")</td>
+<td>❌ Not exposed</td>
+<td>✅ Full OData on any field</td>
+</tr>
+<tr>
+<td>&gt; 500 documents or &gt; 7 MB files</td>
+<td>❌ Platform limits</td>
+<td>✅ Scales to millions</td>
+</tr>
+<tr>
+<td>Content NOT in SharePoint (databases, APIs, repos)</td>
+<td>❌ SharePoint only</td>
+<td>✅ Indexes any data source</td>
+</tr>
+<tr>
+<td>Need hybrid search (keyword + vector)</td>
+<td>❌ Platform decides</td>
+<td>✅ You configure strategy</td>
+</tr>
+<tr>
+<td>Multi-language with language-specific analyzers</td>
+<td>❌ Platform-managed</td>
+<td>✅ Per-field analyzers</td>
+</tr>
+<tr>
+<td>Existing Azure AI Search investment</td>
+<td>❌ Would duplicate data</td>
+<td>✅ Reuse existing indexes</td>
+</tr>
+<tr>
+<td>Need scoring profiles or faceted search</td>
+<td>❌ Not available</td>
+<td>✅ Custom scoring + facets</td>
+</tr>
+<tr>
+<td>Sensitive permissions (live SharePoint RLS)</td>
+<td>✅ Live permission checks</td>
+<td>🟡 Depends on auth config</td>
+</tr>
+</tbody>
+</table>
+<h4 id="the-hybrid-pattern-recommended-for-production">The Hybrid Pattern (Recommended for Production)<a class="headerlink" href="#the-hybrid-pattern-recommended-for-production" title="Permanent link">&para;</a></h4>
+<p>Most production agents benefit from <strong>both</strong>:</p>
+<ul>
+<li><strong>SharePoint Native</strong> for general knowledge (policies, FAQs, guides) — automatic sync, live permissions, zero config</li>
+<li><strong>Azure AI Search</strong> for specialized collections (product catalogs with metadata, support ticket archives, technical docs with custom chunking) — full control, scale, filtering</li>
+</ul>
+<p>Both coexist as separate knowledge sources in the same agent. The orchestrator routes to the right source based on the query.</p>
+<hr />
+<h3 id="why-azure-ai-search-the-enterprise-scenarios">Why Azure AI Search — The Enterprise Scenarios<a class="headerlink" href="#why-azure-ai-search-the-enterprise-scenarios" title="Permanent link">&para;</a></h3>
+<p>Beyond the decision guide above, here are the specific scenarios that justify Azure AI Search:</p>
+<ul>
+<li><strong>Scale</strong>: 50,000+ documents across multiple repositories. Built-in SharePoint indexing may be slow or inconsistent at this scale.</li>
+<li><strong>Custom schemas</strong>: Your content isn't just "documents" — it's structured data with custom fields (product specs with SKU, price, category, availability), work items with complex metadata, or multi-language content requiring language-specific analyzers.</li>
+<li><strong>Hybrid search</strong>: You need both keyword-based (BM25) AND vector-based (semantic) search for maximum recall. Built-in knowledge sources offer semantic ranking but limited control over the search strategy.</li>
+<li><strong>Existing investment</strong>: Your org already has Azure AI Search indexes built by data engineers — indexing CRM data, product catalogs, support tickets, or wiki content. You don't want to rebuild these as SharePoint sites just for Copilot Studio.</li>
+<li><strong>Precision</strong>: You need field-level filtering ("show me only documents from the Engineering department updated in the last 90 days"), scoring profiles, or faceted search. Built-in knowledge sources don't expose these controls.</li>
+</ul>
+<p><strong>Azure AI Search as a Copilot Studio knowledge source</strong> bridges this gap. It reached GA in May 2025 — and it's specifically designed for consuming pre-built indexes that pro-developers have already created.</p>
+<h2 id="the-ideal-outcome">The Ideal Outcome<a class="headerlink" href="#the-ideal-outcome" title="Permanent link">&para;</a></h2>
+<p>Enterprise-grade search powering agent responses:</p>
+<ul>
+<li>[ ] <strong>Pre-built index reuse</strong>: Existing Azure AI Search indexes consumed directly — no data duplication</li>
+<li>[ ] <strong>Vector + semantic search</strong>: Integrated vectorization for high-quality semantic matching</li>
+<li>[ ] <strong>Citation quality</strong>: Responses cite specific documents with links to source content</li>
+<li>[ ] <strong>Custom filtering</strong>: Agent can filter by metadata fields (department, date, type, product line)</li>
+<li>[ ] <strong>Scalable</strong>: Handles 10K to 1M+ documents without degradation</li>
+</ul>
+<h2 id="approaches">Approaches<a class="headerlink" href="#approaches" title="Permanent link">&para;</a></h2>
+<h3 id="approach-a-native-azure-ai-search-knowledge-source-ga">Approach A: Native Azure AI Search Knowledge Source (GA)<a class="headerlink" href="#approach-a-native-azure-ai-search-knowledge-source-ga" title="Permanent link">&para;</a></h3>
+<p><strong>Summary</strong>: Add your Azure AI Search vector index as a first-class knowledge source in Copilot Studio. The platform handles search, ranking, and context injection for generative answers — same as SharePoint or file upload knowledge, but backed by your custom index.<br />
+<strong>Technique</strong>: Copilot Studio knowledge source configuration, Azure AI Search connection (API key or Entra ID), vector index reference, integrated vectorization.</p>
+<h4 id="how-it-works">How It Works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h4>
+<pre class="mermaid"><code>flowchart TB
+    A["User question"] --&gt; B["Copilot Studio&lt;br/&gt;(generative answers)"]
+    B --&gt; C["&lt;b&gt;Azure AI Search&lt;/b&gt;&lt;br/&gt;(vector + semantic search)"]
+    C --&gt; C1["Vectorize the question&lt;br/&gt;(same model used for index)"]
+    C --&gt; C2["Search across vector index"]
+    C --&gt; C3["Apply semantic ranking"]
+    C --&gt; C4["Return top-K relevant chunks"]
+    C --&gt; D["LLM generates response&lt;br/&gt;grounded in search results"]
+    D --&gt; E["Agent response with citations"]</code></pre>
+<p>The key benefit: Copilot Studio uses the <strong>same embedded model</strong> that was used to vectorize your index data. This ensures query-document similarity is optimized — the same semantic space for both the question and the content.</p>
+<h4 id="implementation">Implementation<a class="headerlink" href="#implementation" title="Permanent link">&para;</a></h4>
+<p><strong>Step 1: Prepare your Azure AI Search index</strong></p>
+<p>Your index must be configured for <strong>integrated vectorization</strong>. If you're starting from scratch:</p>
+<ol>
+<li>In Azure Portal → Azure AI Search service → <strong>Import and vectorize data</strong></li>
+<li>Select your data source (Blob Storage, SQL, Cosmos DB, etc.)</li>
+<li>Choose your embedding model (e.g., <code>text-embedding-ada-002</code> or <code>text-embedding-3-small</code>)</li>
+<li>Azure creates a vector index with both text and vector fields</li>
+<li>Optionally enable <strong>semantic ranker</strong> for re-ranking (improves precision for top results)</li>
+</ol>
+<p>If you have an existing index, ensure it includes:</p>
+<ul>
+<li>A <strong>vector field</strong> with embeddings from a supported embedding model</li>
+<li>A <strong>text field</strong> containing the searchable content (must be <code>searchable</code>)</li>
+<li>A <strong>title/URL field</strong> for citations (see Step 4)</li>
+</ul>
+<p><strong>Step 2: Add Azure AI Search as knowledge source in Copilot Studio</strong></p>
+<ol>
+<li>Open your agent → <strong>Knowledge</strong> → <strong>Add knowledge</strong></li>
+<li>Select <strong>Featured</strong> → <strong>Azure AI Search</strong></li>
+<li>Select <strong>Create new connection</strong></li>
+<li>
+<p>Choose authentication type:</p>
+<table>
+<thead>
+<tr>
+<th>Auth Type</th>
+<th>When to Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Access Key</strong></td>
+<td>Simplest. Use the admin key from Azure portal. Good for dev/test.</td>
+</tr>
+<tr>
+<td><strong>Service Principal (Entra ID)</strong></td>
+<td>Production. No key rotation needed. Role-based access.</td>
+</tr>
+<tr>
+<td><strong>Microsoft Entra ID Integrated</strong></td>
+<td>When the agent runs as the signed-in user. Inherits user's search permissions.</td>
+</tr>
+<tr>
+<td><strong>Client Certificate</strong></td>
+<td>High-security environments requiring certificate-based auth.</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Enter your <strong>Azure AI Search Endpoint URL</strong> and credentials</p>
+</li>
+<li>Click <strong>Create</strong> → <strong>Next</strong></li>
+<li>Enter your <strong>vector index name</strong> (only one vector index per connection)</li>
+<li>Click <strong>Add to agent</strong></li>
+</ol>
+<p>The status shows "In progress" while Copilot Studio indexes the metadata. Once "Ready," you can test.</p>
+<p><strong>Step 3: Configure semantic ranking (recommended)</strong></p>
+<p>Semantic ranking re-ranks the initial search results using a deep learning model for improved precision:</p>
+<ol>
+<li>In Azure Portal → your AI Search service → <strong>Semantic configurations</strong></li>
+<li>Create a semantic configuration specifying which fields contain the title, content, and keywords</li>
+<li>In Copilot Studio, the semantic ranker is automatically used if configured on the index</li>
+</ol>
+<blockquote>
+<p><strong>Note</strong>: Semantic ranker requires the Standard tier or higher on your Azure AI Search service. It's not available on the Free tier.</p>
+</blockquote>
+<p><strong>Step 4: Configure citations</strong></p>
+<p>For responses to cite specific documents with clickable links:</p>
+<ul>
+<li>Include a <code>metadata_storage_path</code> field in your index → Copilot Studio interprets this as the citation URL</li>
+<li>OR include any field containing a complete URL → Copilot Studio uses it as the citation link</li>
+<li>Ensure citation URLs point to locations the user has access to (SharePoint, web app, etc.)</li>
+</ul>
+<div class="language-Text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>Index fields for citations:
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>  metadata_storage_path: &quot;https://contoso.sharepoint.com/docs/HR-PTO-Policy.docx&quot;
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>  → Copilot Studio shows: &quot;Source: HR-PTO-Policy.docx [link]&quot;
+</span></code></pre></div>
+<p><strong>Step 5: Enhance with custom search instructions</strong></p>
+<p>Use <code>customInstructions</code> in generative answers to guide how the LLM uses search results:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SearchAndSummarizeContent</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">searchAISearch</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.Answer</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">userInput</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=System.Activity.Text</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">      </span><span class="nt">customInstructions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">        </span><span class="no">## Search Result Usage Rules</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">        </span><span class="no">1. ALWAYS cite the source document title and link</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">        </span><span class="no">2. If multiple documents contain relevant info, synthesize across sources</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">        </span><span class="no">3. If the search returns no results, say: &quot;I couldn&#39;t find that in our knowledge base&quot;</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">        </span><span class="no">4. For numerical data (dates, amounts), quote exactly from the source</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">        </span><span class="no">5. Indicate document recency: &quot;According to [title], last updated [date]...&quot;</span>
+</span></code></pre></div>
+<p><strong>Step 6: Test with targeted queries</strong></p>
+<p>Test queries that exercise different search capabilities:</p>
+<table>
+<thead>
+<tr>
+<th>Test Query</th>
+<th>What It Validates</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"What's the PTO policy?"</td>
+<td>Basic text retrieval</td>
+</tr>
+<tr>
+<td>"Compare PTO policies across regions"</td>
+<td>Multi-document synthesis</td>
+</tr>
+<tr>
+<td>"Engineering documents updated this quarter"</td>
+<td>Metadata awareness (if in index)</td>
+</tr>
+<tr>
+<td>"What does section 3.2 say about carryover?"</td>
+<td>Specific document section retrieval</td>
+</tr>
+<tr>
+<td>"[Query in French for English documents]"</td>
+<td>Cross-lingual semantic search</td>
+</tr>
+</tbody>
+</table>
+<h4 id="evaluation">Evaluation<a class="headerlink" href="#evaluation" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ease of Implementation</td>
+<td>🟢</td>
+<td>UI-based connection. If index exists, takes 15 minutes.</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>🟢</td>
+<td>Index managed in Azure. Data pipeline updates content. Agent configuration is static.</td>
+</tr>
+<tr>
+<td>Channel Compatibility</td>
+<td>🟢</td>
+<td>All channels — knowledge source is backend-only.</td>
+</tr>
+<tr>
+<td>Search Quality</td>
+<td>🟢</td>
+<td>Vector + semantic ranking. Best search quality available in the platform.</td>
+</tr>
+<tr>
+<td>Citation Quality</td>
+<td>🟢</td>
+<td>Automatic citations from index URL fields.</td>
+</tr>
+<tr>
+<td>Scalability</td>
+<td>🟢</td>
+<td>Azure AI Search scales to millions of documents. Built for enterprise.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="limitations">Limitations<a class="headerlink" href="#limitations" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>One vector index per connection</strong>: You can only add one vector index per Azure AI Search connection. For multiple indexes, create multiple connections — but only one is used per generative answers node.</li>
+<li><strong>Index must use integrated vectorization</strong>: The index fields must align with what Copilot Studio expects — vector field, text field, and ideally a URL field for citations. Custom or legacy indexes may need restructuring.</li>
+<li><strong>No direct query control</strong>: You can't specify OData filters, scoring profiles, or search modes from Copilot Studio. The platform manages the search query. If you need query-level control, use Approach B.</li>
+<li><strong>Virtual networks not supported</strong>: Azure AI Search indexes configured for private endpoints / VNets are not accessible from Copilot Studio's cloud-hosted service.</li>
+<li><strong>Cost</strong>: Azure AI Search has per-unit pricing. Semantic ranker adds cost. Vector storage adds cost. Factor these into your budget (<a href="../GEM-012-cost-estimation-and-token-budget-management/">Gem 012</a>).</li>
+</ul>
+<hr />
+<h3 id="approach-b-http-node-to-azure-ai-search-rest-api">Approach B: HTTP Node to Azure AI Search REST API<a class="headerlink" href="#approach-b-http-node-to-azure-ai-search-rest-api" title="Permanent link">&para;</a></h3>
+<p><strong>Summary</strong>: Call the Azure AI Search REST API directly from a topic using <code>HttpRequest</code> nodes. Full control over the search query — filters, scoring profiles, facets, search modes, and result transformation.<br />
+<strong>Technique</strong>: <code>HttpRequest</code> node with Azure AI Search query API, OData filter expressions, custom result formatting, environment variables for keys.</p>
+<h4 id="how-it-works_1">How It Works<a class="headerlink" href="#how-it-works_1" title="Permanent link">&para;</a></h4>
+<div class="language-Text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>User: &quot;Show me engineering docs about Kubernetes from the last 90 days&quot;
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    │
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    ▼
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>Topic extracts: department=Engineering, topic=Kubernetes, dateRange=90days
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    │
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    ▼
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>HttpRequest to Azure AI Search:
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>  POST /indexes/{index}/docs/search
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>  Body: {
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>    &quot;search&quot;: &quot;Kubernetes&quot;,
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>    &quot;filter&quot;: &quot;department eq &#39;Engineering&#39; and lastModified gt 2025-11-19&quot;,
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    &quot;select&quot;: &quot;title,summary,url,lastModified,department&quot;,
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>    &quot;top&quot;: 5,
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>    &quot;queryType&quot;: &quot;semantic&quot;,
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>    &quot;semanticConfiguration&quot;: &quot;default&quot;
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>  }
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>    │
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>    ▼
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>Parse results → format as table/list → display to user
+</span></code></pre></div>
+<p>This gives you <strong>full OData query power</strong> — something the native knowledge source (Approach A) doesn't expose.</p>
+<h4 id="implementation_1">Implementation<a class="headerlink" href="#implementation_1" title="Permanent link">&para;</a></h4>
+<p><strong>Step 1: Store search credentials in environment variables</strong></p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;environmentvariabledefinition</span><span class="w"> </span><span class="na">schemaname=</span><span class="s">&quot;agent_SearchEndpoint&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&lt;defaultvalue&gt;</span>https://contoso-search.search.windows.net<span class="nt">&lt;/defaultvalue&gt;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="nt">&lt;/environmentvariabledefinition&gt;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">&lt;environmentvariabledefinition</span><span class="w"> </span><span class="na">schemaname=</span><span class="s">&quot;agent_SearchApiKey&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">  </span><span class="nt">&lt;defaultvalue&gt;</span>[your-api-key]<span class="nt">&lt;/defaultvalue&gt;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="nt">&lt;/environmentvariabledefinition&gt;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="nt">&lt;environmentvariabledefinition</span><span class="w"> </span><span class="na">schemaname=</span><span class="s">&quot;agent_SearchIndexName&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">  </span><span class="nt">&lt;defaultvalue&gt;</span>enterprise-content<span class="nt">&lt;/defaultvalue&gt;</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nt">&lt;/environmentvariabledefinition&gt;</span>
+</span></code></pre></div>
+<p><strong>Step 2: Build the search query topic</strong></p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AdaptiveDialog</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">beginDialog</span><span class="p">:</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OnRecognizedIntent</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">main</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">  </span><span class="nt">intent</span><span class="p">:</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Advanced Document Search</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">triggerQueries</span><span class="p">:</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;search</span><span class="nv"> </span><span class="s">documents&quot;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;find</span><span class="nv"> </span><span class="s">documents</span><span class="nv"> </span><span class="s">about&quot;</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;show</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">docs&quot;</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;search</span><span class="nv"> </span><span class="s">for&quot;</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">  </span><span class="nt">actions</span><span class="p">:</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="c1"># Collect search parameters</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Question</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">askQuery</span>
+</span><span id="__span-4-16"><a id="__codelineno-4-16" name="__codelineno-4-16" href="#__codelineno-4-16"></a><span class="w">      </span><span class="nt">variable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">init:Topic.SearchQuery</span>
+</span><span id="__span-4-17"><a id="__codelineno-4-17" name="__codelineno-4-17" href="#__codelineno-4-17"></a><span class="w">      </span><span class="nt">prompt</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;What</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">looking</span><span class="nv"> </span><span class="s">for?&quot;</span>
+</span><span id="__span-4-18"><a id="__codelineno-4-18" name="__codelineno-4-18" href="#__codelineno-4-18"></a><span class="w">      </span><span class="nt">entity</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">StringPrebuiltEntity</span>
+</span><span id="__span-4-19"><a id="__codelineno-4-19" name="__codelineno-4-19" href="#__codelineno-4-19"></a>
+</span><span id="__span-4-20"><a id="__codelineno-4-20" name="__codelineno-4-20" href="#__codelineno-4-20"></a><span class="w">    </span><span class="c1"># Execute search via HTTP</span>
+</span><span id="__span-4-21"><a id="__codelineno-4-21" name="__codelineno-4-21" href="#__codelineno-4-21"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HttpRequest</span>
+</span><span id="__span-4-22"><a id="__codelineno-4-22" name="__codelineno-4-22" href="#__codelineno-4-22"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http_search</span>
+</span><span id="__span-4-23"><a id="__codelineno-4-23" name="__codelineno-4-23" href="#__codelineno-4-23"></a><span class="w">      </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POST</span>
+</span><span id="__span-4-24"><a id="__codelineno-4-24" name="__codelineno-4-24" href="#__codelineno-4-24"></a><span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Concatenate(Env.agent_SearchEndpoint, &quot;/indexes/&quot;, Env.agent_SearchIndexName, &quot;/docs/search?api-version=2024-07-01&quot;)</span>
+</span><span id="__span-4-25"><a id="__codelineno-4-25" name="__codelineno-4-25" href="#__codelineno-4-25"></a><span class="w">      </span><span class="nt">headers</span><span class="p">:</span>
+</span><span id="__span-4-26"><a id="__codelineno-4-26" name="__codelineno-4-26" href="#__codelineno-4-26"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;api-key&quot;</span>
+</span><span id="__span-4-27"><a id="__codelineno-4-27" name="__codelineno-4-27" href="#__codelineno-4-27"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Env.agent_SearchApiKey</span>
+</span><span id="__span-4-28"><a id="__codelineno-4-28" name="__codelineno-4-28" href="#__codelineno-4-28"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Content-Type&quot;</span>
+</span><span id="__span-4-29"><a id="__codelineno-4-29" name="__codelineno-4-29" href="#__codelineno-4-29"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;application/json&quot;</span>
+</span><span id="__span-4-30"><a id="__codelineno-4-30" name="__codelineno-4-30" href="#__codelineno-4-30"></a><span class="w">      </span><span class="nt">body</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-4-31"><a id="__codelineno-4-31" name="__codelineno-4-31" href="#__codelineno-4-31"></a><span class="w">        </span><span class="no">{</span>
+</span><span id="__span-4-32"><a id="__codelineno-4-32" name="__codelineno-4-32" href="#__codelineno-4-32"></a><span class="w">          </span><span class="no">&quot;search&quot;: &quot;{Topic.SearchQuery}&quot;,</span>
+</span><span id="__span-4-33"><a id="__codelineno-4-33" name="__codelineno-4-33" href="#__codelineno-4-33"></a><span class="w">          </span><span class="no">&quot;queryType&quot;: &quot;semantic&quot;,</span>
+</span><span id="__span-4-34"><a id="__codelineno-4-34" name="__codelineno-4-34" href="#__codelineno-4-34"></a><span class="w">          </span><span class="no">&quot;semanticConfiguration&quot;: &quot;default&quot;,</span>
+</span><span id="__span-4-35"><a id="__codelineno-4-35" name="__codelineno-4-35" href="#__codelineno-4-35"></a><span class="w">          </span><span class="no">&quot;select&quot;: &quot;title,summary,url,lastModified,department,content&quot;,</span>
+</span><span id="__span-4-36"><a id="__codelineno-4-36" name="__codelineno-4-36" href="#__codelineno-4-36"></a><span class="w">          </span><span class="no">&quot;top&quot;: 5,</span>
+</span><span id="__span-4-37"><a id="__codelineno-4-37" name="__codelineno-4-37" href="#__codelineno-4-37"></a><span class="w">          </span><span class="no">&quot;count&quot;: true</span>
+</span><span id="__span-4-38"><a id="__codelineno-4-38" name="__codelineno-4-38" href="#__codelineno-4-38"></a><span class="w">        </span><span class="no">}</span>
+</span><span id="__span-4-39"><a id="__codelineno-4-39" name="__codelineno-4-39" href="#__codelineno-4-39"></a><span class="w">      </span><span class="nt">responseType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
+</span><span id="__span-4-40"><a id="__codelineno-4-40" name="__codelineno-4-40" href="#__codelineno-4-40"></a><span class="w">      </span><span class="nt">responseVariable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.SearchResults</span>
+</span><span id="__span-4-41"><a id="__codelineno-4-41" name="__codelineno-4-41" href="#__codelineno-4-41"></a><span class="w">      </span><span class="nt">errorHandling</span><span class="p">:</span>
+</span><span id="__span-4-42"><a id="__codelineno-4-42" name="__codelineno-4-42" href="#__codelineno-4-42"></a><span class="w">        </span><span class="nt">continueOnError</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-4-43"><a id="__codelineno-4-43" name="__codelineno-4-43" href="#__codelineno-4-43"></a><span class="w">        </span><span class="nt">statusCodeVariable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.SearchStatus</span>
+</span><span id="__span-4-44"><a id="__codelineno-4-44" name="__codelineno-4-44" href="#__codelineno-4-44"></a><span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+</span><span id="__span-4-45"><a id="__codelineno-4-45" name="__codelineno-4-45" href="#__codelineno-4-45"></a>
+</span><span id="__span-4-46"><a id="__codelineno-4-46" name="__codelineno-4-46" href="#__codelineno-4-46"></a><span class="w">    </span><span class="c1"># Check results</span>
+</span><span id="__span-4-47"><a id="__codelineno-4-47" name="__codelineno-4-47" href="#__codelineno-4-47"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConditionGroup</span>
+</span><span id="__span-4-48"><a id="__codelineno-4-48" name="__codelineno-4-48" href="#__codelineno-4-48"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">checkSearchResults</span>
+</span><span id="__span-4-49"><a id="__codelineno-4-49" name="__codelineno-4-49" href="#__codelineno-4-49"></a><span class="w">      </span><span class="nt">conditions</span><span class="p">:</span>
+</span><span id="__span-4-50"><a id="__codelineno-4-50" name="__codelineno-4-50" href="#__codelineno-4-50"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hasResults</span>
+</span><span id="__span-4-51"><a id="__codelineno-4-51" name="__codelineno-4-51" href="#__codelineno-4-51"></a><span class="w">          </span><span class="nt">condition</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Topic.SearchStatus &gt;= 200 &amp;&amp; Topic.SearchStatus &lt; 300</span>
+</span><span id="__span-4-52"><a id="__codelineno-4-52" name="__codelineno-4-52" href="#__codelineno-4-52"></a><span class="w">          </span><span class="nt">actions</span><span class="p">:</span>
+</span><span id="__span-4-53"><a id="__codelineno-4-53" name="__codelineno-4-53" href="#__codelineno-4-53"></a><span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-4-54"><a id="__codelineno-4-54" name="__codelineno-4-54" href="#__codelineno-4-54"></a><span class="w">              </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">showResults</span>
+</span><span id="__span-4-55"><a id="__codelineno-4-55" name="__codelineno-4-55" href="#__codelineno-4-55"></a><span class="w">              </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-4-56"><a id="__codelineno-4-56" name="__codelineno-4-56" href="#__codelineno-4-56"></a><span class="w">                </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-4-57"><a id="__codelineno-4-57" name="__codelineno-4-57" href="#__codelineno-4-57"></a><span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;🔍</span><span class="nv"> </span><span class="s">Found</span><span class="nv"> </span><span class="s">{Topic.SearchResults.@odata.count}</span><span class="nv"> </span><span class="s">results</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">\&quot;{Topic.SearchQuery}\&quot;:\n\n{Topic.FormattedResults}\n\nWould</span><span class="nv"> </span><span class="s">you</span><span class="nv"> </span><span class="s">like</span><span class="nv"> </span><span class="s">me</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">search</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">something</span><span class="nv"> </span><span class="s">else?&quot;</span>
+</span><span id="__span-4-58"><a id="__codelineno-4-58" name="__codelineno-4-58" href="#__codelineno-4-58"></a><span class="w">      </span><span class="nt">elseActions</span><span class="p">:</span>
+</span><span id="__span-4-59"><a id="__codelineno-4-59" name="__codelineno-4-59" href="#__codelineno-4-59"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SendActivity</span>
+</span><span id="__span-4-60"><a id="__codelineno-4-60" name="__codelineno-4-60" href="#__codelineno-4-60"></a><span class="w">          </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">searchError</span>
+</span><span id="__span-4-61"><a id="__codelineno-4-61" name="__codelineno-4-61" href="#__codelineno-4-61"></a><span class="w">          </span><span class="nt">activity</span><span class="p">:</span>
+</span><span id="__span-4-62"><a id="__codelineno-4-62" name="__codelineno-4-62" href="#__codelineno-4-62"></a><span class="w">            </span><span class="nt">text</span><span class="p">:</span>
+</span><span id="__span-4-63"><a id="__codelineno-4-63" name="__codelineno-4-63" href="#__codelineno-4-63"></a><span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;I&#39;m</span><span class="nv"> </span><span class="s">having</span><span class="nv"> </span><span class="s">trouble</span><span class="nv"> </span><span class="s">searching</span><span class="nv"> </span><span class="s">right</span><span class="nv"> </span><span class="s">now.</span><span class="nv"> </span><span class="s">Try</span><span class="nv"> </span><span class="s">again</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">moment</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">browse</span><span class="nv"> </span><span class="s">directly:</span><span class="nv"> </span><span class="s">[Search</span><span class="nv"> </span><span class="s">Portal](https://search.contoso.com)&quot;</span>
+</span></code></pre></div>
+<p><strong>Step 3: Add filtered search (metadata-driven)</strong></p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="w">    </span><span class="c1"># Advanced: filtered search with metadata</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HttpRequest</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">      </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http_filteredSearch</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="w">      </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POST</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="w">      </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Concatenate(Env.agent_SearchEndpoint, &quot;/indexes/&quot;, Env.agent_SearchIndexName, &quot;/docs/search?api-version=2024-07-01&quot;)</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="w">      </span><span class="nt">headers</span><span class="p">:</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;api-key&quot;</span>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">=Env.agent_SearchApiKey</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Content-Type&quot;</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="w">          </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;application/json&quot;</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a><span class="w">      </span><span class="nt">body</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="w">        </span><span class="no">{</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="w">          </span><span class="no">&quot;search&quot;: &quot;{Topic.SearchQuery}&quot;,</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="w">          </span><span class="no">&quot;filter&quot;: &quot;department eq &#39;{Topic.Department}&#39; and lastModified gt {Topic.DateFilter}&quot;,</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="w">          </span><span class="no">&quot;orderby&quot;: &quot;lastModified desc&quot;,</span>
+</span><span id="__span-5-16"><a id="__codelineno-5-16" name="__codelineno-5-16" href="#__codelineno-5-16"></a><span class="w">          </span><span class="no">&quot;select&quot;: &quot;title,summary,url,lastModified,department&quot;,</span>
+</span><span id="__span-5-17"><a id="__codelineno-5-17" name="__codelineno-5-17" href="#__codelineno-5-17"></a><span class="w">          </span><span class="no">&quot;top&quot;: 10,</span>
+</span><span id="__span-5-18"><a id="__codelineno-5-18" name="__codelineno-5-18" href="#__codelineno-5-18"></a><span class="w">          </span><span class="no">&quot;facets&quot;: [&quot;department,count:5&quot;],</span>
+</span><span id="__span-5-19"><a id="__codelineno-5-19" name="__codelineno-5-19" href="#__codelineno-5-19"></a><span class="w">          </span><span class="no">&quot;queryType&quot;: &quot;semantic&quot;,</span>
+</span><span id="__span-5-20"><a id="__codelineno-5-20" name="__codelineno-5-20" href="#__codelineno-5-20"></a><span class="w">          </span><span class="no">&quot;semanticConfiguration&quot;: &quot;default&quot;,</span>
+</span><span id="__span-5-21"><a id="__codelineno-5-21" name="__codelineno-5-21" href="#__codelineno-5-21"></a><span class="w">          </span><span class="no">&quot;answers&quot;: &quot;extractive|count-3&quot;,</span>
+</span><span id="__span-5-22"><a id="__codelineno-5-22" name="__codelineno-5-22" href="#__codelineno-5-22"></a><span class="w">          </span><span class="no">&quot;captions&quot;: &quot;extractive|highlight-true&quot;</span>
+</span><span id="__span-5-23"><a id="__codelineno-5-23" name="__codelineno-5-23" href="#__codelineno-5-23"></a><span class="w">        </span><span class="no">}</span>
+</span><span id="__span-5-24"><a id="__codelineno-5-24" name="__codelineno-5-24" href="#__codelineno-5-24"></a><span class="w">      </span><span class="nt">responseType</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
+</span><span id="__span-5-25"><a id="__codelineno-5-25" name="__codelineno-5-25" href="#__codelineno-5-25"></a><span class="w">      </span><span class="nt">responseVariable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.FilteredResults</span>
+</span><span id="__span-5-26"><a id="__codelineno-5-26" name="__codelineno-5-26" href="#__codelineno-5-26"></a><span class="w">      </span><span class="nt">errorHandling</span><span class="p">:</span>
+</span><span id="__span-5-27"><a id="__codelineno-5-27" name="__codelineno-5-27" href="#__codelineno-5-27"></a><span class="w">        </span><span class="nt">continueOnError</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-5-28"><a id="__codelineno-5-28" name="__codelineno-5-28" href="#__codelineno-5-28"></a><span class="w">        </span><span class="nt">statusCodeVariable</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Topic.FilterStatus</span>
+</span><span id="__span-5-29"><a id="__codelineno-5-29" name="__codelineno-5-29" href="#__codelineno-5-29"></a><span class="w">      </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+</span></code></pre></div>
+<p><strong>Step 4: Use LLM to synthesize results</strong></p>
+<p>Instead of just listing results, use a Prompt Tool or the generative answers node to synthesize search results into a coherent answer:</p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PromptTool</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">prompt_synthesizeSearch</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="nt">displayName</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Search</span><span class="nv"> </span><span class="s">Result</span><span class="nv"> </span><span class="s">Synthesizer&quot;</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Synthesizes</span><span class="nv"> </span><span class="s">Azure</span><span class="nv"> </span><span class="s">AI</span><span class="nv"> </span><span class="s">Search</span><span class="nv"> </span><span class="s">results</span><span class="nv"> </span><span class="s">into</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">coherent</span><span class="nv"> </span><span class="s">answer&quot;</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="nt">instructions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="w">  </span><span class="no">You are a document analysis assistant. Given search results and a user question,</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="w">  </span><span class="no">synthesize a clear, cited answer.</span>
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="w">  </span><span class="no">User Question: {userQuery}</span>
+</span><span id="__span-6-10"><a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+</span><span id="__span-6-11"><a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a><span class="w">  </span><span class="no">Search Results:</span>
+</span><span id="__span-6-12"><a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a><span class="w">  </span><span class="no">{searchResults}</span>
+</span><span id="__span-6-13"><a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>
+</span><span id="__span-6-14"><a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a><span class="w">  </span><span class="no">Rules:</span>
+</span><span id="__span-6-15"><a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a><span class="w">  </span><span class="no">1. Answer the question using ONLY the information in the search results</span>
+</span><span id="__span-6-16"><a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a><span class="w">  </span><span class="no">2. Cite each fact with the document title: &quot;According to [title]...&quot;</span>
+</span><span id="__span-6-17"><a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a><span class="w">  </span><span class="no">3. If results don&#39;t fully answer the question, say what&#39;s missing</span>
+</span><span id="__span-6-18"><a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a><span class="w">  </span><span class="no">4. Keep the answer under 200 words</span>
+</span><span id="__span-6-19"><a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a><span class="w">  </span><span class="no">5. Include links to source documents for further reading</span>
+</span><span id="__span-6-20"><a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>
+</span><span id="__span-6-21"><a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a><span class="nt">model</span><span class="p">:</span>
+</span><span id="__span-6-22"><a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a><span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ManagedModel</span>
+</span><span id="__span-6-23"><a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a><span class="w">  </span><span class="nt">modelNameHint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GPT4Mini</span>
+</span><span id="__span-6-24"><a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a><span class="nt">inputs</span><span class="p">:</span>
+</span><span id="__span-6-25"><a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">userQuery</span>
+</span><span id="__span-6-26"><a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</span><span id="__span-6-27"><a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a><span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-6-28"><a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">searchResults</span>
+</span><span id="__span-6-29"><a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</span><span id="__span-6-30"><a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a><span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</span><span id="__span-6-31"><a id="__codelineno-6-31" name="__codelineno-6-31" href="#__codelineno-6-31"></a><span class="nt">outputs</span><span class="p">:</span>
+</span><span id="__span-6-32"><a id="__codelineno-6-32" name="__codelineno-6-32" href="#__codelineno-6-32"></a><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">answer</span>
+</span><span id="__span-6-33"><a id="__codelineno-6-33" name="__codelineno-6-33" href="#__codelineno-6-33"></a><span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+</span></code></pre></div>
+<h4 id="evaluation_1">Evaluation<a class="headerlink" href="#evaluation_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ease of Implementation</td>
+<td>🟡</td>
+<td>Requires OData query construction and response parsing. Pro-dev level.</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>🟡</td>
+<td>Queries embedded in YAML. Index schema changes require query updates.</td>
+</tr>
+<tr>
+<td>Channel Compatibility</td>
+<td>🟢</td>
+<td>All channels (HTTP backend).</td>
+</tr>
+<tr>
+<td>Search Quality</td>
+<td>🟢</td>
+<td>Full control: semantic, vector, hybrid, keyword-only. Best precision possible.</td>
+</tr>
+<tr>
+<td>Filter/Facet Support</td>
+<td>🟢</td>
+<td>Full OData filter, facet, and orderby support.</td>
+</tr>
+<tr>
+<td>Citation Quality</td>
+<td>🟢</td>
+<td>You control exactly how results are displayed and cited.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="limitations_1">Limitations<a class="headerlink" href="#limitations_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>OData query complexity</strong>: Building filtered, semantic, faceted queries in JSON within YAML is verbose and error-prone. Test queries in the Azure Portal Search Explorer first, then port to YAML.</li>
+<li><strong>No automatic context injection</strong>: Unlike Approach A (where Copilot Studio manages the search-to-LLM pipeline), you must manually pass search results to a Prompt Tool or generative answers node (Step 4).</li>
+<li><strong>API key management</strong>: The search API key is in an environment variable. For production, consider Managed Identity or service principal authentication.</li>
+<li><strong>Response parsing</strong>: Search results are deeply nested JSON. Extracting and formatting <code>@search.answers</code>, captions, and highlights requires careful Power Fx.</li>
+</ul>
+<hr />
+<h3 id="approach-c-power-automate-search-flow-as-agent-tool">Approach C: Power Automate Search Flow as Agent Tool<a class="headerlink" href="#approach-c-power-automate-search-flow-as-agent-tool" title="Permanent link">&para;</a></h3>
+<p><strong>Summary</strong>: Build a Power Automate flow that queries Azure AI Search, processes and formats results, and returns them to the agent. The flow handles the query complexity; the agent gets clean, formatted results.<br />
+<strong>Technique</strong>: Power Automate cloud flow with HTTP action to AI Search REST API, result parsing and formatting, registered as Copilot Studio tool.</p>
+<h4 id="how-it-works_2">How It Works<a class="headerlink" href="#how-it-works_2" title="Permanent link">&para;</a></h4>
+<pre class="mermaid"><code>flowchart LR
+    A["&lt;b&gt;Agent Topic&lt;/b&gt;&lt;br/&gt;Find docs about X"] -- "search request" --&gt; B["&lt;b&gt;Power Automate Flow&lt;/b&gt;&lt;br/&gt;SearchDocuments"]
+    B --&gt; B1["Build query with filters"]
+    B --&gt; B2["POST to AI Search API"]
+    B --&gt; B3["Parse &amp; format results"]
+    B -- "API query" --&gt; C["&lt;b&gt;Azure AI Search&lt;/b&gt;"]
+    C --&gt; B
+    B -- "Return formatted list" --&gt; A</code></pre>
+<h4 id="implementation_2">Implementation<a class="headerlink" href="#implementation_2" title="Permanent link">&para;</a></h4>
+<p><strong>Step 1: Create the search flow</strong></p>
+<div class="language-Text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>Trigger: Run a flow from Copilot
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>  Inputs:
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>    searchQuery (Text)
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a>    department (Text, optional)
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>    dateRange (Text, optional: &quot;7d&quot;, &quot;30d&quot;, &quot;90d&quot;)
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a>    maxResults (Number, default: 5)
+</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
+</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a>Action: Compose — Build filter expression
+</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>  Expression:
+</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>    if(isBlank(department) &amp;&amp; isBlank(dateRange), &#39;&#39;,
+</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>    concat(
+</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a>      if(isBlank(department), &#39;&#39;, concat(&quot;department eq &#39;&quot;, department, &quot;&#39;&quot;)),
+</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>      if(isBlank(department) || isBlank(dateRange), &#39;&#39;, &#39; and &#39;),
+</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>      if(isBlank(dateRange), &#39;&#39;, concat(&quot;lastModified gt &quot;, dateRangeToDate(dateRange)))
+</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>    ))
+</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a>
+</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>Action: HTTP — Query Azure AI Search
+</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>  Method: POST
+</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>  URI: {SearchEndpoint}/indexes/{IndexName}/docs/search?api-version=2024-07-01
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>  Headers:
+</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>    api-key: {SearchApiKey}
+</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>    Content-Type: application/json
+</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>  Body: {
+</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a>    &quot;search&quot;: &quot;{searchQuery}&quot;,
+</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a>    &quot;filter&quot;: &quot;{filterExpression}&quot;,
+</span><span id="__span-7-26"><a id="__codelineno-7-26" name="__codelineno-7-26" href="#__codelineno-7-26"></a>    &quot;select&quot;: &quot;title,summary,url,lastModified,department&quot;,
+</span><span id="__span-7-27"><a id="__codelineno-7-27" name="__codelineno-7-27" href="#__codelineno-7-27"></a>    &quot;top&quot;: {maxResults},
+</span><span id="__span-7-28"><a id="__codelineno-7-28" name="__codelineno-7-28" href="#__codelineno-7-28"></a>    &quot;queryType&quot;: &quot;semantic&quot;,
+</span><span id="__span-7-29"><a id="__codelineno-7-29" name="__codelineno-7-29" href="#__codelineno-7-29"></a>    &quot;semanticConfiguration&quot;: &quot;default&quot;,
+</span><span id="__span-7-30"><a id="__codelineno-7-30" name="__codelineno-7-30" href="#__codelineno-7-30"></a>    &quot;count&quot;: true
+</span><span id="__span-7-31"><a id="__codelineno-7-31" name="__codelineno-7-31" href="#__codelineno-7-31"></a>  }
+</span><span id="__span-7-32"><a id="__codelineno-7-32" name="__codelineno-7-32" href="#__codelineno-7-32"></a>
+</span><span id="__span-7-33"><a id="__codelineno-7-33" name="__codelineno-7-33" href="#__codelineno-7-33"></a>Action: Select — Format results
+</span><span id="__span-7-34"><a id="__codelineno-7-34" name="__codelineno-7-34" href="#__codelineno-7-34"></a>  From: body(&#39;HTTP&#39;)?[&#39;value&#39;]
+</span><span id="__span-7-35"><a id="__codelineno-7-35" name="__codelineno-7-35" href="#__codelineno-7-35"></a>  Map:
+</span><span id="__span-7-36"><a id="__codelineno-7-36" name="__codelineno-7-36" href="#__codelineno-7-36"></a>    title: item()?[&#39;title&#39;]
+</span><span id="__span-7-37"><a id="__codelineno-7-37" name="__codelineno-7-37" href="#__codelineno-7-37"></a>    summary: item()?[&#39;summary&#39;]
+</span><span id="__span-7-38"><a id="__codelineno-7-38" name="__codelineno-7-38" href="#__codelineno-7-38"></a>    url: item()?[&#39;url&#39;]
+</span><span id="__span-7-39"><a id="__codelineno-7-39" name="__codelineno-7-39" href="#__codelineno-7-39"></a>    modified: formatDateTime(item()?[&#39;lastModified&#39;], &#39;MMM dd, yyyy&#39;)
+</span><span id="__span-7-40"><a id="__codelineno-7-40" name="__codelineno-7-40" href="#__codelineno-7-40"></a>    department: item()?[&#39;department&#39;]
+</span><span id="__span-7-41"><a id="__codelineno-7-41" name="__codelineno-7-41" href="#__codelineno-7-41"></a>
+</span><span id="__span-7-42"><a id="__codelineno-7-42" name="__codelineno-7-42" href="#__codelineno-7-42"></a>Action: Create HTML table (or Join to Markdown)
+</span><span id="__span-7-43"><a id="__codelineno-7-43" name="__codelineno-7-43" href="#__codelineno-7-43"></a>  Format results as readable list
+</span><span id="__span-7-44"><a id="__codelineno-7-44" name="__codelineno-7-44" href="#__codelineno-7-44"></a>
+</span><span id="__span-7-45"><a id="__codelineno-7-45" name="__codelineno-7-45" href="#__codelineno-7-45"></a>Output:
+</span><span id="__span-7-46"><a id="__codelineno-7-46" name="__codelineno-7-46" href="#__codelineno-7-46"></a>  resultCount (Number)
+</span><span id="__span-7-47"><a id="__codelineno-7-47" name="__codelineno-7-47" href="#__codelineno-7-47"></a>  formattedResults (Text)
+</span><span id="__span-7-48"><a id="__codelineno-7-48" name="__codelineno-7-48" href="#__codelineno-7-48"></a>  hasMore (Boolean)
+</span></code></pre></div>
+<p><strong>Step 2: Register as agent tool</strong></p>
+<p>In Copilot Studio → <strong>Tools</strong> → <strong>Add a tool</strong> → Select your search flow → <strong>Add to agent</strong></p>
+<p>Ensure the flow description is clear for routing:</p>
+<blockquote>
+<p>"Searches enterprise documents with optional filters for department and date range. Use when users ask to find, search, or locate specific documents or information."</p>
+</blockquote>
+<p><strong>Step 3: Agent instructions for search usage</strong></p>
+<div class="language-yaml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">instructions</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|+</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="w">  </span><span class="no">## Document Search</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">  </span><span class="no">You have access to the &quot;SearchDocuments&quot; tool for finding enterprise content.</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="w">  </span><span class="no">When users ask to find, search, or locate documents:</span>
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">  </span><span class="no">1. Extract the search query from their message</span>
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">  </span><span class="no">2. If they mention a department, pass it as a filter</span>
+</span><span id="__span-8-9"><a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">  </span><span class="no">3. If they mention a time period (&quot;recent&quot;, &quot;this month&quot;, &quot;last quarter&quot;), map to dateRange</span>
+</span><span id="__span-8-10"><a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">  </span><span class="no">4. Present results as a numbered list with titles, summaries, and links</span>
+</span><span id="__span-8-11"><a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a><span class="w">  </span><span class="no">5. If no results, suggest broader search terms</span>
+</span><span id="__span-8-12"><a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>
+</span><span id="__span-8-13"><a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">  </span><span class="no">Mapping for dateRange:</span>
+</span><span id="__span-8-14"><a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">  </span><span class="no">- &quot;recent&quot; / &quot;this week&quot; → &quot;7d&quot;</span>
+</span><span id="__span-8-15"><a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a><span class="w">  </span><span class="no">- &quot;this month&quot; → &quot;30d&quot;</span>
+</span><span id="__span-8-16"><a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">  </span><span class="no">- &quot;this quarter&quot; / &quot;last 90 days&quot; → &quot;90d&quot;</span>
+</span><span id="__span-8-17"><a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">  </span><span class="no">- No mention → leave empty (all time)</span>
+</span></code></pre></div>
+<h4 id="evaluation_2">Evaluation<a class="headerlink" href="#evaluation_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Criterion</th>
+<th>Rating</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ease of Implementation</td>
+<td>🟡</td>
+<td>Visual flow design. Easier than raw HTTP in YAML, but still requires API knowledge.</td>
+</tr>
+<tr>
+<td>Maintainability</td>
+<td>🟢</td>
+<td>Flow is visual, reusable. Query changes in one place.</td>
+</tr>
+<tr>
+<td>Channel Compatibility</td>
+<td>🟢</td>
+<td>All channels (flow is backend).</td>
+</tr>
+<tr>
+<td>Search Quality</td>
+<td>🟢</td>
+<td>Same API access as Approach B. Full query control.</td>
+</tr>
+<tr>
+<td>Filter/Facet Support</td>
+<td>🟢</td>
+<td>Full OData in the flow — easier to build/test than in YAML.</td>
+</tr>
+<tr>
+<td>Result Formatting</td>
+<td>🟢</td>
+<td>Flow handles complex JSON parsing and formatting before returning to agent.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="limitations_2">Limitations<a class="headerlink" href="#limitations_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Flow quota</strong>: Each search consumes a flow run. Heavy search usage will impact your Power Automate quota.</li>
+<li><strong>Latency</strong>: Power Automate adds 1-3 seconds to each search. Over Approach B's direct HTTP call.</li>
+<li><strong>Dual infrastructure</strong>: You're maintaining both a flow AND the Azure AI Search index. Two places for things to break.</li>
+<li><strong>No automatic generative grounding</strong>: Like Approach B, results are returned as data. You must pass them to a Prompt Tool or generative answers for synthesis.</li>
+</ul>
+<hr />
+<h2 id="comparison-matrix">Comparison Matrix<a class="headerlink" href="#comparison-matrix" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Dimension</th>
+<th>Approach A: Native Knowledge</th>
+<th>Approach B: HTTP Direct</th>
+<th>Approach C: PA Search Flow</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Implementation Effort</strong></td>
+<td>🟢 Low (15 min config)</td>
+<td>🟡 Medium (YAML queries)</td>
+<td>🟡 Medium (visual flow)</td>
+</tr>
+<tr>
+<td><strong>Query Control</strong></td>
+<td>🔴 None (platform-managed)</td>
+<td>🟢 Full OData power</td>
+<td>🟢 Full OData power</td>
+</tr>
+<tr>
+<td><strong>Generative Grounding</strong></td>
+<td>🟢 Automatic (SearchAndSummarize)</td>
+<td>🟡 Manual (Prompt Tool)</td>
+<td>🟡 Manual (Prompt Tool)</td>
+</tr>
+<tr>
+<td><strong>Filtering</strong></td>
+<td>🔴 Not exposed</td>
+<td>🟢 Full OData filters</td>
+<td>🟢 Full OData filters</td>
+</tr>
+<tr>
+<td><strong>Citation Quality</strong></td>
+<td>🟢 Automatic from URL fields</td>
+<td>🟡 Manual formatting</td>
+<td>🟡 Manual formatting</td>
+</tr>
+<tr>
+<td><strong>Flow Quota Impact</strong></td>
+<td>🟢 None</td>
+<td>🟢 None</td>
+<td>🔴 1 run per search</td>
+</tr>
+<tr>
+<td><strong>Latency</strong></td>
+<td>🟢 Optimized by platform</td>
+<td>🟢 Direct (~200-500ms)</td>
+<td>🟡 +1-3s (PA overhead)</td>
+</tr>
+<tr>
+<td><strong>Index Requirements</strong></td>
+<td>🟡 Vector index with integrated vectorization</td>
+<td>🟢 Any index type</td>
+<td>🟢 Any index type</td>
+</tr>
+<tr>
+<td><strong>Best When...</strong></td>
+<td>Standard search, same experience as SharePoint knowledge</td>
+<td>Custom filters, scoring profiles, pro-dev team</td>
+<td>Visual flow design, reusable search tool</td>
+</tr>
+</tbody>
+</table>
+<h2 id="recommended-approach">Recommended Approach<a class="headerlink" href="#recommended-approach" title="Permanent link">&para;</a></h2>
+<p><strong>Start with Approach A (Native Knowledge Source)</strong> — if your index uses integrated vectorization, this gives you generative answers grounded in Azure AI Search with zero code. The experience is identical to having a supercharged SharePoint knowledge source — but backed by a scalable Azure search index. For most agents, this is sufficient and dramatically better than built-in SharePoint knowledge.</p>
+<p><strong>Add Approach B or C when you need query control</strong> — specifically when users need to <strong>filter by metadata</strong> (department, date, document type). The native knowledge source (Approach A) doesn't expose filter parameters. If your users say "Show me Engineering documents from last quarter," you need Approach B or C.</p>
+<p><strong>The hybrid pattern (recommended for production)</strong>:</p>
+<div class="language-Text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>General knowledge questions  →  Approach A (Native, automatic grounding)
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>  &quot;What&#39;s our data retention policy?&quot;
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>  &quot;How do I configure SSO?&quot;
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>Filtered document search     →  Approach B/C (HTTP or Flow, with filters)
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>  &quot;Show me Engineering docs from Q4&quot;
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>  &quot;Find compliance reports about GDPR&quot;
+</span><span id="__span-9-8"><a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a>  &quot;Latest updates from the Security team&quot;
+</span></code></pre></div>
+<p>Use <strong>Approach A</strong> as the primary knowledge source (always active, grounding every generative answer). Use <strong>Approach B or C</strong> as an explicit search tool for when users want to <strong>find specific documents</strong> with metadata filters.</p>
+<h2 id="platform-gotchas">Platform Gotchas<a class="headerlink" href="#platform-gotchas" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Azure AI Search indexes on virtual networks are NOT supported.</strong><br />
+Copilot Studio's cloud service cannot access AI Search indexes configured with private endpoints or VNet restrictions. Your index must be publicly accessible (secured by API key or Entra ID). For private indexes, use Approach C (Power Automate flow) — the flow can run with a VNet connection.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Only ONE vector index per connection.</strong><br />
+You can add only one vector index name per AI Search connection in Copilot Studio. If you have multiple indexes (e.g., HR-policies, Engineering-docs, Product-catalog), you need separate connections — but only one is used per generative answers node. For multi-index search, use Approach B/C with multiple HTTP queries.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><strong>Semantic ranker requires Standard tier or higher.</strong><br />
+The semantic ranker (which dramatically improves search precision) is not available on the Free tier of Azure AI Search. If your index is on the Free tier, you get basic vector search only — no semantic re-ranking.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Integrated vectorization is the recommended indexing approach.</strong><br />
+Use the Azure Portal's "Import and vectorize data" wizard to create your index. This ensures the same embedding model is used for both index vectorization and runtime query vectorization — critical for search quality.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Citations require a URL field in the index.</strong><br />
+If your index doesn't include a <code>metadata_storage_path</code> or another field with a complete URL, Copilot Studio can't generate citation links. Add a URL field to your index schema that points to the source document's accessible location.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p><strong>Test queries in Search Explorer first.</strong><br />
+Before writing HTTP queries in YAML or Power Automate, test them in the Azure Portal's <strong>Search Explorer</strong>. This validates your query syntax, filters, and semantic configuration against live data — then port the working query to your agent.</p>
+</div>
+<h2 id="related-gems">Related Gems<a class="headerlink" href="#related-gems" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../GEM-008-knowledge-source-optimization/">Gem 008</a></strong>: Knowledge Source Optimization — Covers document format and chunking for built-in sources. This Gem is "<a href="../GEM-008-knowledge-source-optimization/">GEM-008</a> Level 2" for enterprise-scale knowledge with Azure AI Search.</li>
+<li><strong><a href="../GEM-028-grounding-agents-in-enterprise-analytics-data/">Gem 028</a></strong>: Grounding in Enterprise Analytics — For structured data (warehouses, Power BI). This Gem covers unstructured/semi-structured document search.</li>
+<li><strong><a href="../GEM-018-sharepoint-document-retrieval-and-display/">Gem 018</a></strong>: SharePoint Document Retrieval — For finding and listing SharePoint documents. Azure AI Search can index SharePoint content for more powerful search.</li>
+<li><strong><a href="../GEM-012-cost-estimation-and-token-budget-management/">Gem 012</a></strong>: Cost Estimation — Azure AI Search has per-unit and per-query costs. Factor into your token budget analysis.</li>
+<li><strong><a href="../GEM-023-mcp-connector-integration-patterns/">Gem 023</a></strong>: MCP Connector Integration — MCP is for tool integration; AI Search is for knowledge grounding. Different roles in the agent architecture.</li>
+</ul>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="https://learn.microsoft.com/microsoft-copilot-studio/knowledge-azure-ai-search">Microsoft Learn: Add Azure AI Search as knowledge source</a></li>
+<li><a href="https://learn.microsoft.com/azure/search/vector-search-how-to-create-index">Microsoft Learn: Create a vector index (Azure AI Search)</a></li>
+<li><a href="https://learn.microsoft.com/azure/search/vector-search-integrated-vectorization">Microsoft Learn: Integrated vectorization in Azure AI Search</a></li>
+<li><a href="https://learn.microsoft.com/azure/search/semantic-search-overview">Microsoft Learn: Semantic ranker overview</a></li>
+<li><a href="https://learn.microsoft.com/rest/api/searchservice/documents/search-post">Microsoft Learn: Azure AI Search REST API (query)</a></li>
+<li><a href="https://learn.microsoft.com/azure/search/search-query-odata-filter">Microsoft Learn: OData filter syntax for Azure AI Search</a></li>
+<li><a href="https://azure.microsoft.com/pricing/details/search/">Azure AI Search pricing</a></li>
+</ul>
+<hr />
+<p><em>Gem 026 | Author: Sébastien Brochet | Created: 2026-02-17 | Last Validated: 2026-02-17 | Platform Version: current (Azure AI Search knowledge source GA since May 2025)</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      © 2026 Sébastien Brochet. All rights reserved.
+    </div>
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://linkedin.com/in/sebastienbrochet" target="_blank" rel="noopener" title="linkedin.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3M135.4 416H69V202.2h66.5V416zM102.2 96a38.5 38.5 0 1 1 0 77 38.5 38.5 0 1 1 0-77m282.1 320h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/sebbrochet" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.top", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate", "toc.follow"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
